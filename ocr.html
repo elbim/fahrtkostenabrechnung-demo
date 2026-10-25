@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08619e">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Interaktiver Demonstrator für eine digitale Fahrtkostenabrechnung der Unfallkasse NRW. Keine echte Einreichung.">
+  <title>Fahrtkostenabrechnung | UK NRW – Demo mit Belegerkennung</title>
+  <style>
+    :root { --blue:#0868aa;--blue-strong:#075b97;--navy:#103661;--ink:#243a52;--muted:#58718d;--edge:#d6e4f1;--wash:#edf6fe;--pale:#f7fbff;--white:#fff;--green:#108069;--red:#bd3b43;--radius:15px;--shadow:0 13px 38px rgba(32,86,135,.09);font-family:Arial,"Segoe UI",system-ui,sans-serif;color:var(--ink);font-synthesis:none }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:linear-gradient(#edf6fd,#f7fbff 240px,#f4f8fc);line-height:1.45} button,input,select,textarea{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.55} a{color:var(--blue)} :focus-visible{outline:3px solid #efae46!important;outline-offset:2px} .shell{max-width:1430px;margin:auto;padding:0 22px 35px} .site{background:#fff;box-shadow:var(--shadow);border:1px solid #e2edf8;border-radius:0 0 20px 20px;overflow:hidden}
+    .top{min-height:79px;padding:15px 29px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#fff} .brand{font-weight:800;color:var(--navy);font-size:clamp(21px,2.2vw,26px);line-height:1.12;letter-spacing:-.5px}.brand small{display:block;font-size:12px;color:#316c9d;margin-top:3px;font-weight:550;letter-spacing:0} .top-nav{display:flex;align-items:center;gap:30px;color:#254c77;font-size:13px}.top-nav span{white-space:nowrap} .top-nav button{background:#fff;color:var(--navy);border:1px solid #c4dcee;padding:11px 14px;border-radius:12px;font-weight:700} .demo-badge{display:inline-flex;align-items:center;gap:7px;color:#714c06;background:#fff2d6;border:1px solid #f5d897;border-radius:99px;padding:6px 11px;font-size:12px;font-weight:700;white-space:nowrap} .demo-badge:before{content:'●';font-size:9px}
+    .hero{min-height:172px;padding:30px 35px;display:flex;align-items:center;position:relative;background:linear-gradient(110deg,#e0f1fd,#edf8ff 63%,#f4f9fb);overflow:hidden}.hero-copy{position:relative;z-index:1;max-width:660px}.hero h1{font-size:clamp(28px,3vw,39px);line-height:1.16;color:#092f5c;margin:0 0 12px;letter-spacing:-1.2px}.hero p{margin:0;color:#24547e;font-size:clamp(15px,1.5vw,18px)}.skyline{position:absolute;right:0;bottom:-3px;width:49%;height:95%;opacity:.8;pointer-events:none} .layout{display:grid;grid-template-columns:238px minmax(0,1fr);column-gap:20px;padding:24px 26px 25px}
+    .stepbar{display:flex;justify-content:space-around;position:relative;gap:6px;padding:10px 20px 29px;margin-left:257px}.stepbar:before{content:"";position:absolute;top:27px;left:11%;right:11%;height:2px;background:#c8d9e8}.step-button{position:relative;z-index:1;display:flex;align-items:center;flex-direction:column;gap:8px;border:0;background:transparent;color:#54728d;padding:0 5px;font-size:13px;text-align:center;min-width:86px}.step-button .num{height:36px;width:36px;border-radius:50%;display:grid;place-items:center;background:#e8eef5;border:2px solid #e1e8f1;color:#42668a;font-size:16px;font-weight:700}.step-button.active{color:var(--blue-strong);font-weight:750}.step-button.active .num{background:var(--blue);color:white;border-color:var(--blue)}.step-button.complete .num{background:#d7f1e9;color:#08755f;border-color:#b5dfd4}.step-button:not(:disabled):hover .num{box-shadow:0 0 0 4px #edf5fc}.step-button:disabled{opacity:1;cursor:default}
+    .aside{display:flex;flex-direction:column;gap:16px}.side-links{background:linear-gradient(180deg,#f2f8fe,#edf6fc);border:1px solid #e8f1f8;padding:13px 9px;border-radius:14px;min-height:339px}.side-link{width:100%;display:flex;align-items:center;gap:13px;border:0;background:transparent;border-radius:9px;color:#27527a;font-weight:650;padding:15px 12px;margin-bottom:2px;text-align:left;font-size:13px}.side-link .glyph{font-size:20px;width:27px;display:inline-flex;align-items:center;justify-content:center}.side-link.active{background:#d9edf9;color:#035e9c;box-shadow:inset 4px 0 0 var(--blue)}.side-link:hover{background:#e6f2fb}.aside-help{padding:16px 15px;background:var(--wash);border:1px solid #e4f1fa;border-radius:13px;font-size:12px}.aside-help strong{color:#09548f;display:block;margin-bottom:8px}.aside-help p{margin:0 0 12px;color:#557392}.aside-help button{padding:8px 12px;border:1px solid #98bfde;border-radius:7px;background:#fff;color:#0c659f;font-weight:700}
+    .main-card{border:1px solid #e1edf7;border-radius:15px;box-shadow:0 3px 12px rgba(18,85,142,.05);background:#fff;min-height:420px;padding:23px 27px 18px;min-width:0}.section-title{display:flex;align-items:center;gap:15px;margin-bottom:22px}.section-icon{height:46px;min-width:46px;border-radius:14px;background:#eaf5fe;display:grid;place-items:center;font-size:25px;color:#0867a8}.section-title h2{font-size:23px;line-height:1.25;color:var(--navy);margin:0 0 3px;letter-spacing:-.4px}.section-title p{margin:0;color:#5d7794;font-size:13px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;row-gap:14px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field.full{grid-column:1/-1}.field label,.label{color:#184874;font-size:12px;font-weight:750}.field label .optional{font-weight:500;color:#8297a9}.req{color:var(--red)}.field input,.field select,.field textarea,.small-input{width:100%;border:1px solid #c9dcec;border-radius:8px;padding:10px 11px;background:white;color:#1d496d;min-height:42px;box-shadow:inset 0 1px 1px #f4f7f9;outline:none;font-size:14px}.field input:focus,.field select:focus,.field textarea:focus{border-color:#1681c4;box-shadow:0 0 0 3px #d9effe}.field textarea{resize:vertical;min-height:82px}.field input.invalid,.field select.invalid,.field textarea.invalid{border-color:#d44755;background:#fffafb}.helper{font-size:11px;color:#718ba2}.checkline{display:flex;align-items:flex-start;gap:9px;line-height:1.4;font-size:13px;color:#315878}.checkline input{accent-color:var(--blue);width:17px;height:17px;margin:1px 0 0;flex-shrink:0}.checkline label{cursor:pointer}.checks{display:grid;gap:10px}.info{display:flex;align-items:flex-start;gap:10px;background:#ecf5fb;border:1px solid #e4f1f9;border-radius:10px;color:#37658b;font-size:12px;padding:12px 14px;margin:18px 0 12px}.info i{font-style:normal;font-weight:700;border-radius:50%;background:#74a5c8;color:#fff;min-width:20px;height:20px;display:grid;place-items:center}.info.warn{background:#fff7e8;border-color:#f1dbb6;color:#76511b}.info.warn i{background:#dba044}.actions{display:flex;align-items:center;gap:10px;border-top:1px solid #eef3f8;margin-top:23px;padding-top:19px}.btn{border:1px solid #9bc5e4;border-radius:8px;background:#fff;color:#0763a1;font-weight:750;font-size:13px;padding:11px 17px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn.primary{background:linear-gradient(180deg,#087ac0,#075e9b);border-color:#065d9a;color:white;box-shadow:0 2px 5px rgba(0,100,166,.17)}.btn.primary:hover{background:#04558e}.btn.ghost{border-color:#d7e5f0;color:#3e6a8d;background:#f8fbfe}.btn.danger{border-color:#f0cece;color:#b53d47;background:#fff}.btn:hover{filter:brightness(.98)}.actions .spacer{flex:1}
+    .journey-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:23px 0 10px}.journey-header h3{margin:0;color:#123b66;font-size:16px}.journey-card{border:1px solid #d8e6f1;border-radius:12px;padding:18px 17px 20px;margin:0 0 16px;background:linear-gradient(#fff,#fbfdff)}.journey-card .journey-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px}.journey-top strong{color:#194a73;font-size:14px}.triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.choice-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}.footnote{font-size:11px;color:#6c839b}.trip-total{background:#f2f8fd;border-radius:8px;padding:10px 12px;font-size:12px;color:#31587d;margin-top:13px}.inline-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:17px}.summary-block{border:1px solid #dce9f4;border-radius:11px;padding:16px 19px;margin-bottom:11px;break-inside:avoid}.summary-header{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #e8f0f7;padding-bottom:10px;margin-bottom:10px}.summary-header h3{color:#0a3b6a;margin:0;font-size:16px}.summary-header button{border:0;background:none;color:var(--blue);font-size:12px;font-weight:700;text-decoration:underline}.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}.sum-entry{min-width:0}.sum-entry span{font-size:11px;color:#657f95;display:block}.sum-entry strong{font-size:13px;color:#284e72;font-weight:650;overflow-wrap:anywhere;display:block}.sum-line{border-top:1px solid #e9f1f6;padding-top:9px;margin-top:9px}.price-box{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#edf7fd;border-radius:9px;padding:12px 14px;color:#174e77;font-size:14px;font-weight:700}
+    .dropzone{border:2px dashed #b7d5ec;border-radius:11px;min-height:195px;background:#f9fcff;display:grid;place-items:center;text-align:center;padding:20px 12px;transition:background .2s,border .2s}.dropzone.dragover{background:#e6f5ff;border-color:#0875b5}.cloud{font-size:38px;color:#0576b8;line-height:1}.dropzone strong{color:#075f9d;display:block;font-size:14px;margin:7px 0}.dropzone .btn{margin:8px 0}.uploads{display:grid;gap:9px;margin-top:12px}.upload-item{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid #dbe8f3;border-radius:10px}.file-icon{border-radius:8px;background:#e2f1fb;color:#1374a8;height:39px;width:39px;display:grid;place-items:center;flex-shrink:0;font-size:11px;font-weight:800}.file-icon.pdf{color:#b3343e;background:#fff0f0}.file-text{min-width:0;flex:1}.file-text strong{display:block;color:#20527d;font-size:12px;overflow-wrap:anywhere}.file-text small{color:#77899a;font-size:11px}.file-actions{display:flex;flex-wrap:wrap;gap:5px}.mini{font-size:11px;border:0;background:transparent;color:#0965a3;font-weight:750;padding:6px}.mini.red{color:#b8494f}.upload-columns{display:grid;grid-template-columns:1fr minmax(190px,.66fr);gap:18px;align-items:start}.preview{border:1px solid #d8e4ef;border-radius:12px;background:#eff5fa;padding:12px;min-height:220px}.preview h4{font-size:12px;color:#264e6e;margin:0 0 11px;overflow-wrap:anywhere}.preview-content{background:white;min-height:200px;border:1px solid #dce7f1;display:grid;place-items:center;overflow:hidden}.preview-content img{width:100%;max-height:270px;object-fit:contain}.preview-content .placeholder{color:#7791a7;text-align:center;padding:28px}.preview-content .placeholder span{display:block;font-size:42px}
+    .success{text-align:center;max-width:730px;margin:30px auto;padding:12px 12px 25px}.success-icon{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#daf4e9;color:#0c8c69;font-size:42px;margin:0 auto 18px}.success h2{color:#154a75;font-size:27px;margin:6px 0}.success p{color:#54738e}.success-code{display:inline-block;padding:11px 20px;border-radius:10px;background:#f0f7fc;color:#0b619b;font-size:18px;font-weight:700;margin:15px}.success .btn{margin:5px}.muted{color:#7c94a8}.errorbox{background:#fff0f0;border:1px solid #e6bfc1;padding:12px;border-radius:9px;color:#a2333d;font-size:13px;margin:10px 0}.privacy-footer{max-width:1430px;margin:13px auto 0;padding:0 25px;color:#6d869e;font-size:11px;display:flex;justify-content:space-between;gap:15px}.privacy-footer button{background:transparent;border:0;color:#4d7497;text-decoration:underline}.mobile-nav{display:none}.notice{padding:9px 14px;background:#fff5df;border-bottom:1px solid #f1ddb0;text-align:center;color:#745221;font-size:12px}.notice strong{color:#895a09}.toolbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:0 22px 18px}.toolbar .btn{font-size:12px;min-height:35px;padding:8px 11px}.hidden{display:none!important}
+    @media(max-width:1000px){.layout{grid-template-columns:196px 1fr;padding:17px;gap:14px}.stepbar{margin-left:209px}.top-nav{gap:12px}.hero{min-height:145px}.hero h1{font-size:32px}.side-link{padding:12px 8px}.main-card{padding:22px 18px}.upload-columns{grid-template-columns:1fr}.preview{display:none}.skyline{width:52%;opacity:.52}}
+    @media(max-width:730px){.shell{padding:0 0 20px}.site{border-radius:0;border-width:0 0 1px}.top{padding:13px 16px;min-height:68px}.brand{font-size:20px}.brand small{font-size:10px}.top-nav{display:none}.demo-badge{font-size:10px;padding:5px 9px}.hero{padding:22px 18px;min-height:145px}.hero h1{font-size:27px;margin-bottom:8px}.hero p{font-size:14px;max-width:365px}.skyline{width:80%;opacity:.2}.stepbar{margin:0;padding:18px 6px 19px;gap:0}.stepbar:before{top:34px;left:12%;right:12%}.step-button{min-width:0;flex:1;font-size:10px;line-height:1.2;gap:6px}.step-button .num{height:33px;width:33px;font-size:14px}.layout{display:block;padding:0 12px 20px}.aside{display:none}.main-card{padding:18px 14px;border-radius:12px;min-height:450px}.section-title{gap:10px;margin-bottom:21px}.section-title h2{font-size:21px}.section-icon{height:42px;min-width:42px;font-size:21px}.form-grid{grid-template-columns:1fr;row-gap:13px}.triple{grid-template-columns:1fr 1fr}.triple .field:first-child{grid-column:1/-1}.inline-grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:1fr 1fr;gap:8px}.actions{gap:7px;flex-wrap:wrap}.actions .btn{padding:11px 12px}.actions .spacer{flex:1}.actions .btn.primary{min-width:110px;margin-left:auto}.journey-card{padding:12px}.choice-row{gap:12px}.upload-columns{grid-template-columns:1fr}.toolbar{justify-content:center;margin:0 10px 15px;flex-wrap:wrap}.toolbar .btn{font-size:11px}.privacy-footer{padding:0 15px;flex-direction:column;gap:4px}.mobile-nav{display:flex;align-items:center;justify-content:space-around;position:sticky;bottom:0;background:#fff;border-top:1px solid #d9e8f3;padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:3;box-shadow:0 -5px 20px #c5d9e633}.mobile-nav button{border:0;background:none;color:#66829b;display:grid;justify-items:center;gap:1px;font-size:10px;padding:4px 9px}.mobile-nav button span{font-size:18px}.mobile-nav button.active{color:#086cae;font-weight:800}.privacy-footer{padding-bottom:18px}}
+    @media(max-width:390px){.step-button{font-size:9px}.hero h1{font-size:24px}.summary-grid{grid-template-columns:1fr}.btn{font-size:12px}.demo-badge{font-size:9px}.top{gap:8px}}
+
+    /* Routenberechnung: barrierearm und auf Smartphone nutzbar. */
+    .route-tools{grid-column:1/-1;border:1px solid #cfe2f3;border-radius:12px;background:#f3f9ff;padding:15px;display:flex;flex-direction:column;gap:9px}
+    .route-tool-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+    .route-tool-title{font-size:14px;font-weight:750;color:#123d69}
+    .route-tools .btn{max-width:100%;white-space:normal;text-align:center}
+    .route-message{font-size:13px;line-height:1.5;color:#355e80;overflow-wrap:anywhere}
+    .route-message[role="alert"]{color:#a22f3e}
+    .route-success{color:#096d56;font-weight:700}
+    .route-match{display:block;margin-top:5px;line-height:1.5;color:#365e77;font-weight:400}
+    .route-sources{font-size:11px;color:#496c88;line-height:1.5}
+    .route-sources a{color:#075b97;text-decoration:underline}
+    .route-tools button:disabled{opacity:.75}
+    @media(max-width:730px){.route-tool-head{display:flex;flex-direction:column;align-items:stretch}.route-tools{padding:12px}.route-tools .btn{width:100%}}
+
+    /* M9-Demo: KI-/OCR-Belegauswertung, reine Browser-Verarbeitung. */
+    .ocr-area{margin-top:18px;border:1px solid #c9dfef;background:#f5faff;border-radius:12px;padding:16px}
+    .ocr-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .ocr-intro h3{color:#113f69;font-size:16px;margin:0 0 6px}
+    .ocr-intro p{font-size:12px;color:#506f88;margin:0;max-width:680px;line-height:1.55}
+    .ocr-hint{margin-top:12px;font-size:12px;color:#5b7188}
+    .ocr-file{background:#fff;border:1px solid #d8e7f2;border-radius:10px;padding:14px;margin-top:13px;min-width:0}
+    .ocr-file-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .ocr-file-head strong{font-size:13px;color:#204969;overflow-wrap:anywhere}
+    .ocr-state{font-size:12px;color:#567a98;margin:6px 0 8px}
+    .ocr-state.success{color:#08765b}.ocr-state.error{color:#ae3943}
+    .ocr-progress{width:100%;accent-color:#0574b2;max-width:550px;height:12px}
+    .ocr-metadata{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 14px;margin:12px 0}
+    .ocr-metadata .field{margin:0}.ocr-metadata .field input,.ocr-metadata .field select{background:#fff}
+    .ocr-kind{max-width:400px;margin-top:12px}
+    .ocr-check{display:flex;align-items:center;gap:6px;font-size:11px;color:#53738d}
+    .ocr-check input{width:15px;height:15px;accent-color:#0868aa}
+    .ocr-compare{padding:9px 10px;font-size:12px;background:#eef7fc;border-radius:8px;color:#395c7a;margin:9px 0}
+    .ocr-compare.diff{background:#fff4dc;color:#805c13}
+    .ocr-file-buttons{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px}
+    .ocr-raw{margin-top:12px;color:#4e718e;font-size:12px}
+    .ocr-raw summary{cursor:pointer;font-weight:650}
+    .ocr-raw pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:250px;overflow:auto;background:#f0f4f8;border:1px solid #dbe9f2;padding:10px;border-radius:7px;color:#344c64;font-size:11px}
+    .ocr-warning{font-size:12px;color:#815b1d;background:#fff8e9;border:1px solid #f3e0b9;padding:10px;border-radius:9px;margin-top:12px}
+    @media(max-width:730px){.ocr-area{padding:12px}.ocr-metadata{grid-template-columns:1fr}.ocr-file{padding:11px}.ocr-file-buttons .btn{width:100%}}
+
+    @media print{body{background:#fff}.shell{padding:0}.site{box-shadow:none;border:0}.top-nav,.demo-badge,.notice,.hero,.stepbar,.aside,.actions,.toolbar,.mobile-nav,.privacy-footer,.summary-header button,.no-print{display:none!important}.layout{display:block;padding:0}.main-card{border:0;box-shadow:none}.summary-block{break-inside:avoid}}
+
+    /* IBAN-Prüfung im Browser – ohne Kontoabfrage und ohne externe Anfragen. */
+    .iban-feedback{font-size:12px;color:#58718d;line-height:1.45;display:block;margin-top:2px}
+    .iban-feedback.good{color:#08715d;font-weight:700}
+    .iban-feedback.bad{color:#b03340;font-weight:650}
+    .field input.iban-valid{border-color:#16866e;background:#f7fdfb}
+    .field input.iban-valid:focus{border-color:#16866e;box-shadow:0 0 0 3px #d5f4e9}
+
+    .doctor-lookup{grid-column:1/-1;border:1px solid #cddde9;border-radius:13px;background:#f8fbff;padding:16px;display:flex;flex-direction:column;gap:11px}
+    .doctor-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .doctor-head strong{font-size:14px;color:#153d66}
+    .doctor-head .btn{max-width:100%;white-space:normal}
+    .doctor-info{font-size:13px;line-height:1.55;color:#4e6a83}
+    .doctor-message{font-size:13px;line-height:1.55;color:#244c6f}
+    .doctor-message.error{color:#a12f3a}
+    .doctor-results{display:grid;gap:9px}
+    .doctor-result{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px;background:white;border:1px solid #d4e3f1;border-radius:10px}
+    .doctor-result-text{min-width:0;overflow-wrap:anywhere}
+    .doctor-result-text strong{display:block;font-size:13px;color:#103861}
+    .doctor-result-text small{display:block;margin-top:3px;color:#547088;font-size:12px;line-height:1.45}
+    .doctor-result .btn{flex-shrink:0}
+    .doctor-selection{border-radius:11px;padding:12px;background:#eaf5ff;border:1px solid #bfdcf4;display:flex;flex-direction:column;gap:7px;font-size:13px}
+    .doctor-selection strong{color:#17436a}
+    .doctor-warning{font-size:12px;line-height:1.5;color:#865b18;background:#fff7e6;border:1px solid #f4dda8;border-radius:8px;padding:9px}
+    .doctor-selection .doctor-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .doctor-links{font-size:12px;line-height:1.6;border-top:1px solid #dce7f0;padding-top:9px;color:#4b657d}
+    .doctor-links a{color:#075b97;text-decoration:underline}
+    @media(max-width:730px){.doctor-head{flex-direction:column;align-items:stretch}.doctor-head .btn{width:100%}.doctor-result{align-items:stretch;flex-direction:column}.doctor-result .btn{width:100%}.doctor-lookup{padding:12px}}
+  
+    .fare-panel{grid-column:1/-1;display:grid;gap:12px;background:#f1f8ff;border:1px solid #bbd8ed;border-radius:13px;padding:15px;min-width:0}
+    .fare-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;color:#123d66;font-size:14px}
+    .fare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .fare-note{font-size:12px;line-height:1.55;color:#315d7d}
+    .fare-note a{color:#075b97}
+    .fare-status{padding:11px;border:1px solid #d2e3ef;background:#fff;border-radius:9px;color:#315a79;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+    .fare-status.good{border-color:#9ddac3;background:#edf9f3;color:#0b654e}
+    .fare-status.warn{border-color:#eed7a1;background:#fff8e9;color:#795415}
+    .fare-status.bad{border-color:#f0bfc3;background:#fff3f3;color:#922f37}
+    .fare-offers{display:grid;gap:8px}.fare-offer{border:1px solid #d3e5f0;background:white;border-radius:8px;padding:10px 12px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .fare-offer strong{color:#194c73;font-size:13px}.fare-offer small{display:block;font-size:11px;color:#5e7890;margin-top:3px}
+    .fare-offer .btn{padding:7px 10px;min-height:34px}
+    @media(max-width:730px){.fare-grid{grid-template-columns:1fr}.fare-header{align-items:stretch;flex-direction:column}.fare-header .btn{width:100%}.fare-offer{align-items:stretch;flex-direction:column}.fare-offer .btn{width:100%}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="site">
+    <header class="top"><div class="brand">Unfallkasse NRW<small>Sicher. Gesund. Für Sie da.</small></div><nav class="top-nav" aria-label="Kopfzeile"><span>Leistungen</span><span>Service</span><span>Formulare</span><span>Hilfe</span><button type="button" id="aboutBtn">ⓘ&nbsp; Über diese Demo</button></nav><div class="demo-badge" title="Prototyp: keine echte Übermittlung">PROTOTYP</div></header>
+    <div class="notice"><strong>Demoversion:</strong> Keine echte Antragstellung. Nur Testdaten verwenden. Freiwillige Routen- und Praxissuche nutzt externe OpenStreetMap-Dienste.</div>
+    <section class="hero"><div class="hero-copy"><h1>Fahrtkostenabrechnung</h1><p>Reichen Sie Ihre Fahrtkosten für medizinische Behandlungen einfach digital ein.</p></div>
+    <svg class="skyline" viewBox="0 0 600 155" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <defs><linearGradient id="land" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b6d7e8"/><stop offset="1" stop-color="#7dc2ac"/></linearGradient></defs>
+      <path d="M0 145 Q58 113 117 143 T235 140 T340 141 T483 131 T600 139 V155 H0Z" fill="#c4e3ce"/>
+      <g fill="#97c7cf" opacity=".9"><path d="M115 144V67h7v77zM103 68h30v4h-30zM107 71q11-20 22 0zM118 27l2 39h-4z"/><path d="M370 143V38h7v105zM360 40h28v6h-28zM372 12l3 29h-6z"/><path d="M424 143V47h18v96zM418 47l15-34 15 34zM450 143V40h18v103zM447 40l13-35 12 35zM440 143v-53h15v53z"/></g>
+      <path d="M165 142H365M172 141q45-95 93 0M267 141q45-95 92 0" fill="none" stroke="#93bacc" stroke-width="5"/><path d="M159 142h213" stroke="#80b2c2" stroke-width="7"/>
+      <g fill="url(#land)"><circle cx="64" cy="94" r="23"/><circle cx="45" cy="114" r="27"/><circle cx="84" cy="119" r="28"/><rect x="61" y="116" width="9" height="38"/><circle cx="528" cy="91" r="29"/><circle cx="553" cy="108" r="34"/><circle cx="502" cy="122" r="26"/><rect x="526" y="118" width="10" height="36"/></g>
+    </svg></section>
+    <div id="stepbar" class="stepbar" aria-label="Fortschritt"></div>
+    <div class="layout"><aside class="aside"><div id="sidebar" class="side-links"></div><div class="aside-help"><strong>ⓘ &nbsp;Fragen zur Fahrtkostenabrechnung?</strong><p>Diese Anwendung ist ein klickbarer Demonstrator für das Transferprojekt.</p><button type="button" id="helpBtn">Zur Hilfe</button></div></aside><main class="main-card" id="main" aria-live="polite"></main></div>
+    <div class="toolbar no-print"><button type="button" class="btn ghost" id="exampleBtn">✦ Beispieldaten laden</button><button type="button" class="btn ghost" id="clearBtn">↺ Formular zurücksetzen</button></div>
+  </div>
+</div>
+<footer class="privacy-footer"><span>Unverbindlicher UX-Prototyp für das MPM-Transferprojekt – keine offizielle Anwendung und keine Verbindung zu Fachverfahren.</span><span>Belege/OCR werden lokal verarbeitet; Modelle werden online nachgeladen. Formulardaten bleiben im Browser. Bei freiwilliger Praxis-, Routen- oder ÖPNV-Suche werden jeweils eingegebene Adressen bzw. Koordinaten an externe Such-, Routen- oder Verbindungsdienste gesendet; bitte ausschließlich Testdaten verwenden.</span></footer>
+<nav class="mobile-nav" aria-label="Mobile Navigation"><button type="button" id="mobileStart"><span>⌂</span>Start</button><button type="button" class="active" id="mobileForm"><span>▤</span>Formular</button><button type="button" id="mobileHelp"><span>?</span>Hilfe</button><button type="button" id="mobileInfo"><span>♙</span>Info</button></nav>
+<input id="filePicker" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/jpeg,image/png" multiple hidden>
+<script>
+(()=>{'use strict';
+const STEPS=[['♙','Stammdaten'],['🚙','Fahrtangaben'],['▤','Beleg hochladen'],['✓','Prüfen & absenden']];
+const emptyTrip=()=>({id:Date.now()+Math.random(),fareNetwork:"",fareLevel:"",fareProduct:"single",fareQuote:null,date:'',doctor:'',purpose:'Ambulante Behandlung',from:'',to:'',transport:'PKW',distance:'',distanceSource:'',doctorSuggestion:null,roundtrip:true,count:'1',ticket:'',parking:'',escort:false,note:''});
+const blank=()=>({person:{reference:'',insurance:'',first:'',last:'',dob:'',street:'',zip:'',city:'',phone:'',email:'',iban:''},trips:[emptyTrip()],files:[],confirmation:false,privacySeen:false});
+let data=blank(),currentStep=0,visited=0,submitted=false,receipt='',errorText='',previewIndex=0;
+let routeBusy=false,doctorBusy=false,transitBusy=false,ocrBusy=false,lastGeoAt=0,nominatimQueue=Promise.resolve(); const geocodeCache=new Map(),routeState=new Map(),doctorState=new Map(),doctorCache=new Map(),transitState=new Map();
+/*
+ * M9-TRANSFERPROJEKT – FACHLICHE UND TECHNISCHE MERKER (TODO FÜR PRODUKTIVSYSTEM)
+ * TODO [ARZTREGISTER]: OSM-Praxissuche durch autorisierte DGUV-DIVA-/ggf. KBV-Anbindung ersetzen;
+ *       Praxisidentität, Adresse, Gültigkeitszeitpunkt und Register-IDs verlässlich abgleichen.
+ * TODO [ROUTING]: Öffentliche Nominatim-/OSRM-Demoendpunkte nicht produktiv einsetzen;
+ *       interne DSGVO-konforme Geocoding-/Routing-Schnittstelle und Freigaben vorsehen.
+ * TODO [ÖPNV]: Tarifauskunft NRW (VRR/VRS/Westfalen/NRW-Tarif, eezy, D-Ticket) bei den
+ *       zuständigen Tarifdatenlieferanten über eine vertraglich geregelte Backend-API anbinden.
+ *       Preisstufe darf nicht aus der PKW-Kilometerstrecke abgeleitet werden.
+ * TODO [ÖPNV-HISTORIE]: Tarife und Fahrkartenangebote zum historischen Behandlungstag
+ *       versionieren. Eine aktuelle Fahrplanauskunft ist keine rückwirkende Preisbestätigung.
+ * TODO [ÖPNV-ERSTATTUNG]: Wirtschaftlichkeit, Eigenanteile, vorhandene Zeitkarten,
+ *       Mobilitäts-/Begleitbedarf, 1./2. Klasse und tatsächliche Belege fachlich entscheiden.
+ * TODO [DATENSCHUTZ]: Datenminimierung, Zweckbindung, AVV/Vertragsgrundlage, Löschung,
+ *       Rollen-/Rechtemodell, Auftragsannahme, Barrierefreiheit und IT-Sicherheit prüfen.
+ * TODO [KI-OCR]: Die Tesseract.js-LSTM-OCR ist ein neuronales Texterkennungsverfahren,
+ *       KEIN generatives LLM und KEINE verlässliche semantische Belegvalidierung. Extraktion,
+ *       Dokumentklassifikation und Zuordnung hier regelbasiert; Rückfragen durch Sachbearbeitung.
+ * TODO [KI-OCR-PRODUKTIV]: Unabhängige Evaluation mit unterschiedlichen Praxisstempeln,
+ *       maschinengeschriebenen/handgeschriebenen Belegen, Tickets, QR-Codes, schlechten Fotos,
+ *       mehreren Belegen, historischen Dokumenten und mehrsprachigen Belegen durchführen.
+ *       Resultate mit Fundstelle und Konfidenz, Mensch-im-Prozess, Manipulationsschutz,
+ *       getrennte Felder für Fahrt-/Leistungsdatum, Rechnungsdatum und Zahlbetrag.
+ * TODO [KI-OCR-DATENSCHUTZ]: Gesonderte DPIA/DSFA prüfen, besondere Kategorien
+ *       personenbezogener Daten nicht in Drittanbieter-KI hochladen. In Demo laden
+ *       Bibliotheken/Sprachmodelle vom CDN; produktiv selbst hosten, CSP und SRI prüfen.
+ *       Kein OCR-Volltext in localStorage; Metadaten nur nach bewusster Bestätigung exportieren.
+ * TODO [FACHVERFAHREN]: Serverseitige Validierung und medienbruchfreie GUSO²-Anbindung
+ *       erst nach Governance-/Schnittstellen- und Freigabeklärung.
+ */
+// Fachlich befristete, veröffentlichte PREISREFERENZEN, keine standortbasierte Tarifermittlung.
+// Die Preisstufe muss der Nutzer aus seiner Fahrkarte kennen und auswählen.
+// Quelle VRR: https://www.vrr.de/fileadmin/user_upload/pdf/service/downloads/Weitere_Broschueren_und_Tarifinformationen/VRR_Preise_2026.pdf
+// Quelle VRS: https://www.vrs.de/tickets/ticketsortiment/einzelticket
+// Für andere Regionen/Zeiträume keine automatische Gültigkeitsaussage abgeben.
+const FARE_REFERENCES={
+ VRR:{name:'VRR',validFrom:'2026-06-01',validUntil:'2026-12-31',source:'https://www.vrr.de/fileadmin/user_upload/pdf/service/downloads/Weitere_Broschueren_und_Tarifinformationen/VRR_Preise_2026.pdf',products:{single:{A:3.80,B:7.80,C:19.80},day:{A:7.60,B:15.60,C:38.40}}},
+ VRS:{name:'VRS',validFrom:'2026-06-01',validUntil:'2026-12-31',source:'https://www.vrs.de/tickets/ticketsortiment/einzelticket',products:{single:{K:2.90,'1a':3.50,'1b':4.00,'2':5.50,'3':13.90}}}
+};
+const FARE_PRODUCTS={single:'EinzelTicket Erwachsene (2. Klasse)',day:'24-Stunden-Ticket (1 Person)',subscription:'Deutschlandticket / Zeitkarte',eezy:'eezy / eTarif',other:'Sonstiger Fahrschein'};
+// Externe DB-Community-API (v6.db.transport.rest): keine garantierte Verfügbarkeit,
+// nicht von der DB als offizielle Tarifprüfung für Leistungsabrechnung beauftragt.
+// Bei DB-Vendo kann tickets=true erst beim Refresh der Verbindung nutzbar sein.
+
+const main=document.getElementById('main'),bar=document.getElementById('stepbar'),sidebar=document.getElementById('sidebar'),picker=document.getElementById('filePicker');
+const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const val=(v)=>h(v),fmt=(n)=>Number(n||0).toLocaleString('de-DE',{style:'currency',currency:'EUR'}),num=v=>Number.parseFloat(String(v||'0').replace(',','.'))||0;
+
+// Der ISO-13616-Prüfsummenalgorithmus (Mod 97) prüft nur die formale IBAN,
+// NICHT, ob eine Bankverbindung existiert oder einem bestimmten Menschen gehört.
+const IBAN_LENGTHS={AD:24,AE:23,AL:28,AT:20,AZ:28,BA:20,BE:16,BG:22,BH:22,BI:27,BR:29,BY:28,
+ CH:21,CR:22,CY:28,CZ:24,DE:22,DJ:27,DK:18,DO:28,EE:20,EG:29,ES:24,FI:18,FK:18,FO:18,
+ FR:27,GB:22,GE:22,GI:23,GL:18,GR:27,GT:28,HR:21,HU:28,IE:22,IL:23,IQ:23,IS:26,
+ IT:27,JO:30,KW:30,KZ:20,LB:28,LC:32,LI:21,LT:20,LU:20,LV:21,LY:25,MC:27,MD:24,
+ ME:22,MK:19,MN:20,MR:27,MT:31,MU:30,NI:28,NL:18,NO:15,OM:23,PK:24,PL:28,PS:29,
+ PT:25,QA:29,RO:24,RS:22,RU:33,SA:24,SC:31,SD:18,SE:24,SI:19,SK:24,SM:27,SO:23,
+ ST:25,SV:28,TL:23,TN:24,TR:26,UA:29,VA:22,VG:24,XK:20};
+const compactIban=raw=>String(raw??'').replace(/\s/g,'').toUpperCase();
+function ibanCheck(raw){
+  const iban=compactIban(raw);
+  if(!iban)return {ok:false,empty:true,message:'Bitte geben Sie eine IBAN ein.'};
+  if(!/^[A-Z0-9]+$/.test(iban))return {ok:false,message:'Nur Buchstaben A–Z, Ziffern 0–9 und Leerzeichen sind erlaubt.'};
+  if(!/^[A-Z]{2}[0-9]{2}/.test(iban))return {ok:false,message:'Die IBAN muss mit zwei Länderbuchstaben und zwei Prüfziffern beginnen.'};
+  const country=iban.slice(0,2),expected=IBAN_LENGTHS[country];
+  if(!expected)return {ok:false,message:'Das Länderkürzel „'+country+'“ ist für die IBAN-Prüfung nicht hinterlegt.'};
+  if(iban.length!==expected)return {ok:false,message:'Die IBAN für „'+country+'“ muss '+expected+' Zeichen haben (aktuell '+iban.length+').'};
+  if(country==='DE'&&!/^DE[0-9]{20}$/.test(iban))return {ok:false,message:'Bei einer deutschen IBAN müssen nach „DE“ ausschließlich 20 Ziffern folgen.'};
+  const rearranged=iban.slice(4)+iban.slice(0,4);
+  let remainder=0;
+  for(const char of rearranged){
+    const value=char.charCodeAt(0);
+    if(value>=48&&value<=57)remainder=(remainder*10+value-48)%97;
+    else remainder=(remainder*100+value-55)%97;
+  }
+  if(remainder!==1)return {ok:false,message:'Die IBAN hat eine ungültige Prüfziffer. Bitte kontrollieren Sie die Eingabe.'};
+  return {ok:true,message:'✓ Formal gültige IBAN – Format, Länge und Prüfziffer stimmen.'};
+}
+function updateIbanStatus(showError=false){
+  const field=document.getElementById('iban'),status=document.getElementById('iban-status');
+  if(!field||!status)return;
+  const result=ibanCheck(field.value);
+  status.className='iban-feedback'+(result.ok?' good':showError&&!result.empty?' bad':'');
+  status.textContent=result.message;
+  field.classList.toggle('iban-valid',result.ok);
+  field.classList.toggle('invalid',showError&&!result.ok&&!result.empty);
+  field.setAttribute('aria-invalid',String(showError&&!result.ok&&!result.empty));
+}
+const desc=(id,text)=>`<span class="helper" id="${id}">${text}</span>`;
+const f=(key,label,options={})=>{const v=options.v??data.person[key]??'',type=options.type??'text',required=options.required?' <span class="req">*</span>':'',full=options.full?' full':'',help=options.help?desc(key+'-help',options.help):'';const input=(options.items?`<select id="${key}" data-field="person.${key}" ${options.required?'required':''}>${options.items.map(x=>`<option value="${h(x)}" ${x===v?'selected':''}>${h(x)}</option>`).join('')}</select>`:options.area?`<textarea id="${key}" data-field="person.${key}" ${options.required?'required':''}>${val(v)}</textarea>`:`<input id="${key}" data-field="person.${key}" type="${type}" ${options.required?'required':''} ${options.auto?`autocomplete="${options.auto}"`:''} ${options.placeholder?`placeholder="${h(options.placeholder)}"`:''} value="${val(v)}" ${options.max?`maxlength="${options.max}"`:''} ${key==='iban'?'inputmode="text" autocapitalize="characters" spellcheck="false" aria-describedby="iban-help iban-status"':''}>`);return `<div class="field${full}"><label for="${key}">${label}${required}</label>${input}${help}${key==='iban'?'<span id="iban-status" class="iban-feedback" aria-live="polite">IBAN bitte eingeben.</span>':''}</div>`};
+const tf=(t,key,label,opts={})=>{const v=t[key]??'',full=opts.full?' full':'',required=opts.required?' <span class="req">*</span>':'',dataAttr=`data-trip="${t.id}" data-tripfield="${key}"`,input=opts.items?`<select id="t${t.id}-${key}" ${dataAttr}>${opts.items.map(x=>`<option value="${h(x)}" ${x===v?'selected':''}>${h(x)}</option>`).join('')}</select>`:opts.area?`<textarea id="t${t.id}-${key}" ${dataAttr} maxlength="500">${val(v)}</textarea>`:`<input id="t${t.id}-${key}" type="${opts.type??'text'}" ${dataAttr} value="${val(v)}" ${opts.min?`min="${opts.min}"`:''} ${opts.step?`step="${opts.step}"`:''} ${opts.placeholder?`placeholder="${h(opts.placeholder)}"`:''}>`;return `<div class="field${full}"><label for="t${t.id}-${key}">${label}${required}</label>${input}</div>`};
+function nav(){bar.innerHTML=STEPS.map(([icon,name],i)=>`<button type="button" data-nav="${i}" class="step-button ${currentStep===i?'active':''} ${i<currentStep?'complete':''}" aria-current="${currentStep===i?'step':'false'}"><span class="num">${i<currentStep?'✓':i+1}</span><span>${name}</span></button>`).join(''); sidebar.innerHTML=STEPS.map(([icon,name],i)=>`<button type="button" data-nav="${i}" class="side-link ${currentStep===i?'active':''}"><span class="glyph">${icon}</span>${name}</button>`).join('')}
+function heading(i,detail){return `<div class="section-title"><span class="section-icon" aria-hidden="true">${STEPS[i][0]}</span><div><h2>${i+1}. ${STEPS[i][1]}</h2><p>${detail}</p></div></div>`}
+const actions=(next='Weiter →')=>`<div class="actions"><button type="button" class="btn" data-action="back" ${currentStep===0?'style="display:none"':''}>← Zurück</button><button type="button" class="btn ghost" data-action="save">▤ Zwischenspeichern</button><span class="spacer"></span><button type="button" class="btn primary" data-action="next">${next}</button></div>`;
+function renderPerson(){return `${heading(0,'Bitte geben Sie Ihre persönlichen Daten als versicherte Person an.')}
+<div class="form-grid">
+${f('reference','Aktenzeichen / Unfallnummer <span class="optional">(falls bekannt)</span>',{placeholder:'z. B. U-2026-001234'})}
+${f('insurance','Versichertennummer <span class="optional">(falls bekannt)</span>',{placeholder:'Optional'})}
+${f('first','Vorname',{required:true,auto:'given-name'})}${f('last','Nachname',{required:true,auto:'family-name'})}
+${f('dob','Geburtsdatum',{required:true,type:'date'})}${f('street','Straße und Hausnummer',{required:true,auto:'street-address'})}
+${f('zip','Postleitzahl',{required:true,auto:'postal-code',max:5})}${f('city','Ort',{required:true,auto:'address-level2'})}
+${f('phone','Telefon <span class="optional">(optional)</span>',{type:'tel',auto:'tel'})}${f('email','E-Mail <span class="optional">(optional)</span>',{type:'email',auto:'email'})}
+${f('iban','IBAN für die Erstattung',{required:true,full:true,placeholder:'DE00 0000 0000 0000 0000 00',max:42,help:'Formale Prüfung: Länderkennung, Länge und Prüfziffer. Keine Bank- oder Kontoprüfung, keine Datenübermittlung.'})}
+</div><div class="info"><i>i</i><div>Pflichtangaben sind mit * gekennzeichnet. Angaben dienen ausschließlich der Demonstration; bitte keine echten Gesundheits- oder Bankdaten verwenden.</div></div>${actions()}`}
+function routeMessage(t){
+  const st=routeState.get(String(t.id));
+  if(st?.status==='busy')return 'Die Adressen werden gesucht und die Fahrstrecke wird berechnet …';
+  if(st?.status==='error')return '<strong>Strecke nicht ermittelt:</strong> '+h(st.message)+' <span class="route-match">Bitte Adressen prüfen oder Kilometer manuell eintragen.</span>';
+  if(st?.status==='ok')return '<span class="route-success">✓ '+h(st.message)+'</span><span class="route-match"><b>Start gefunden:</b> '+h(st.startName)+'<br><b>Ziel gefunden:</b> '+h(st.endName)+'</span>'+(st.link?'<a href="'+h(st.link)+'" target="_blank" rel="noopener noreferrer">Route auf OpenStreetMap ansehen ↗</a>':'');
+  if(t.distanceSource==='OSRM')return '<span class="route-success">✓ Zuletzt automatisch berechnet: '+h(String(t.distance).replace('.',','))+' km (einfache Strecke).</span> <span class="route-match">Bei geänderten Adressen bitte erneut berechnen.</span>';
+  return 'Start- und Zieladresse eintragen, dann auf „Strecke berechnen“ klicken. Die Straßenroute (PKW) wird als einfache Strecke übernommen; die Kilometer können anschließend manuell angepasst werden.';
+}
+function updateRouteDisplay(t){
+  const host=document.querySelector(`[data-tripcontainer="${t.id}"]`);
+  if(!host)return;
+  const message=host.querySelector('[data-route-message]');
+  if(message){message.innerHTML=routeMessage(t);message.setAttribute('role',routeState.get(String(t.id))?.status==='error'?'alert':'status')}
+  const distance=host.querySelector(`[data-tripfield="distance"]`);
+  if(distance&&distance.value!==String(t.distance??''))distance.value=t.distance;
+  const total=host.querySelector('.trip-total');
+  if(total)total.innerHTML=tripTotal(t);
+  document.querySelectorAll('[data-action="calculateRoute"]').forEach(b=>b.disabled=routeBusy);
+}
+function tripTotal(t){return (t.transport==='PKW'?'Kilometer insgesamt: <b>'+h((num(t.distance)*(t.roundtrip?2:1)*Math.max(1,num(t.count))).toLocaleString('de-DE',{maximumFractionDigits:1}))+' km</b>':'Verkehrsmittel: <b>'+h(t.transport)+'</b>')+' &nbsp; · &nbsp; Eingetragene Zusatzkosten: <b>'+fmt((num(t.parking)+num(t.ticket))*Math.max(1,num(t.count)))+'</b><br><span class="footnote">Keine verbindliche Berechnung des Erstattungsanspruchs.'+(t.distanceSource==='OSRM'?' Entfernungsangabe automatisch ermittelt (OSRM), manuell änderbar.':'')+'</span>'}
+function clearRouteIfAddressChanged(t){
+  if(t.distanceSource==='OSRM'){t.distance='';t.distanceSource='';}
+  routeState.delete(String(t.id));
+  updateRouteDisplay(t);
+}
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function jsonFetch(url){
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),16000);
+  try{const res=await fetch(url,{signal:controller.signal,headers:{'Accept':'application/json'}});
+    if(!res.ok)throw Error('Kartendienst derzeit nicht erreichbar (HTTP '+res.status+').');
+    return await res.json();
+  }finally{clearTimeout(timer)}
+}
+// Anfragen an den öffentlichen Nominatim-Dienst seriell ausführen (maximal ~1 pro Sekunde).
+// Keine Live-Autovervollständigung; jede Suche benötigt einen Klick.
+function nominatimQuery(parameters){
+  const run=nominatimQueue.catch(()=>{}).then(async()=>{
+    const elapsed=Date.now()-lastGeoAt;
+    if(elapsed<1400)await wait(1400-elapsed);
+    lastGeoAt=Date.now();
+    return jsonFetch('https://nominatim.openstreetmap.org/search?'+new URLSearchParams(parameters));
+  });
+  nominatimQueue=run.then(()=>{},()=>{});
+  return run;
+}
+async function geoSearch(address){
+  const key=address.trim().toLocaleLowerCase('de-DE');
+  if(geocodeCache.has(key))return geocodeCache.get(key);
+  const matches=await nominatimQuery({q:address.trim(),format:'jsonv2',limit:'1',countrycodes:'de','accept-language':'de'});
+  if(!Array.isArray(matches)||!matches.length)throw Error('Adresse nicht gefunden: „'+address.trim()+'“.');
+  const selected=matches[0],lat=Number(selected.lat),lon=Number(selected.lon);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon))throw Error('Adresse konnte nicht eindeutig bestimmt werden.');
+  const found={lat,lon,name:String(selected.display_name||address)};geocodeCache.set(key,found);return found;
+}
+async function calculateRoute(id){
+  const t=data.trips.find(x=>String(x.id)===String(id));if(!t||routeBusy)return;
+  const from=t.from.trim(),to=t.to.trim();
+  if(from.length<5||to.length<5){routeState.set(String(t.id),{status:'error',message:'Bitte beide Adressen mit Straße, Hausnummer und Ort ergänzen.'});updateRouteDisplay(t);return;}
+  const addressSignature=JSON.stringify([from,to]);
+  routeBusy=true;routeState.set(String(t.id),{status:'busy'});updateRouteDisplay(t);
+  try{
+    const start=await geoSearch(from),end=await geoSearch(to);
+    const coords=[start,end].map(p=>p.lon+','+p.lat).join(';');
+    const res=await jsonFetch('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=false&alternatives=false&steps=false');
+    if(res.code!=='Ok'||!res.routes?.length||!Number.isFinite(res.routes[0].distance))throw Error('Zwischen den Adressen wurde keine PKW-Route gefunden.');
+    if(!data.trips.includes(t)||JSON.stringify([t.from.trim(),t.to.trim()])!==addressSignature){routeState.delete(String(id));return;}
+    const km=(Math.round(res.routes[0].distance/100)/10).toFixed(1);
+    t.distance=km;t.distanceSource='OSRM';
+    const routeLink='https://www.openstreetmap.org/directions?'+new URLSearchParams({engine:'fossgis_osrm_car',route:start.lat+','+start.lon+';'+end.lat+','+end.lon});
+    routeState.set(String(t.id),{status:'ok',message:'Straßenroute: '+km.replace('.',',')+' km (einfache Strecke).',startName:start.name,endName:end.name,link:routeLink});
+  }catch(e){routeState.set(String(t.id),{status:'error',message:e?.name==='AbortError'?'Zeitüberschreitung beim Kartendienst. Bitte später erneut versuchen.':String(e?.message||'Netzwerkfehler – bitte manuell eintragen.')});}
+  finally{routeBusy=false;updateRouteDisplay(t)}
+}
+function doctorCity(t){
+ const address=String(t.to||'');
+ const m=address.match(/\b\d{5}\s+([A-Za-zÄÖÜäöüß\s.-]{2,})/);
+ if(m)return m[1].split(',')[0].trim();
+ const parts=address.split(',');
+ if(parts.length>1)return parts[parts.length-1].replace(/\b\d{5}\b/g,'').trim();
+ return String(data.person.city||'').trim();
+}
+function locationText(osm){
+ const a=osm.address||{};
+ const road=[a.road||a.pedestrian||a.footway||a.street||'',a.house_number||''].filter(Boolean).join(' ').trim();
+ const city=a.city||a.town||a.village||a.municipality||a.suburb||'';
+ const locality=[a.postcode||'',city].filter(Boolean).join(' ').trim();
+ if(road&&locality)return road+', '+locality;
+ const disp=String(osm.display_name||'').split(',').map(x=>x.trim());
+ if(road)return road+(locality?', '+locality:'');
+ return disp.slice(1,5).filter(Boolean).join(', ')||disp.join(', ');
+}
+function canonicalAddress(a){return String(a||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('de-DE').replace(/straße/g,'str').replace(/str\./g,'str').replace(/[^a-z0-9]/g,'')}
+function doctorComparison(t){
+ if(!t.doctorSuggestion)return '';
+ const chosen=t.doctorSuggestion;
+ if(!String(t.to||'').trim())return 'Zieladresse ist noch leer.';
+ return canonicalAddress(t.to)===canonicalAddress(chosen.address)?'Der eingegebene Zieladress-Text stimmt mit dem OpenStreetMap-Vorschlag überein.':'Die eingetragene Zieladresse weicht vom OpenStreetMap-Vorschlag ab. Bitte prüfen oder die vorgeschlagene Adresse übernehmen.';
+}
+function doctorLookupHtml(t){
+ const state=doctorState.get(String(t.id))||{};
+ const results=state.results||[];
+ const selected=t.doctorSuggestion;
+ const isError=state.status==='error';
+ return `<div class="doctor-lookup" data-doctor-panel="${t.id}">
+ <div class="doctor-head"><strong>⚕ Praxis / Arzt und Behandlungsadresse finden</strong><button type="button" class="btn" data-action="searchDoctor" data-id="${t.id}" ${doctorBusy?'disabled':''}>${state.status==='busy'?'Suche läuft …':'⌕ Praxis suchen'}</button></div>
+ <div class="doctor-info">Geben Sie oben einen Praxis-, Klinik- oder Arztnamen ein. Nach Klick suchen wir dazu öffentlich erfasste Standorte in OpenStreetMap. Ausgewählte Adressen können als Zieladresse übernommen werden.</div>
+ <div class="doctor-message${isError?' error':''}" role="status" aria-live="polite">${state.status==='busy'?'Praxisstandorte werden gesucht …':state.message?h(state.message):'Keine amtliche Arztregisterprüfung: OpenStreetMap-Treffer sind nur Standortvorschläge und können fehlen oder veraltet sein.'}</div>
+ ${results.length?`<div class="doctor-results">${results.map((r,i)=>`<div class="doctor-result"><div class="doctor-result-text"><strong>${h(r.name)}</strong><small>${h(r.address||'Keine vollständige Adresse vorhanden')}</small></div><button type="button" class="btn" data-action="pickDoctor" data-id="${t.id}" data-index="${i}">Auswählen</button></div>`).join('')}</div>`:''}
+ ${selected?`<div class="doctor-selection"><strong>Ausgewählter OpenStreetMap-Standort – nicht amtlich verifiziert</strong><span>${h(selected.name)} · ${h(selected.address)}</span><div class="doctor-warning">${h(doctorComparison(t))}</div><div class="doctor-actions"><button class="btn primary" type="button" data-action="applyDoctorAddress" data-id="${t.id}">✓ Adresse übernehmen</button><button class="btn" type="button" data-action="clearDoctor" data-id="${t.id}">Auswahl aufheben</button></div></div>`:''}
+ <div class="doctor-links">Für eine <b>offizielle Recherche</b>: <a href="https://diva-online.dguv.de/diva-online/" target="_blank" rel="noopener noreferrer">DGUV D-Arzt-Verzeichnis ↗</a> · <a href="https://arztsuche.116117.de/" target="_blank" rel="noopener noreferrer">116117-Arztsuche ↗</a>. Die Demo besitzt keine direkte Schnittstelle zu diesen Registern.<br>Datenschutzhinweis: Beim Klick auf „Praxis suchen“ werden der eingegebene Name und ggf. der Ortsname an <a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Nominatim</a> gesendet. Keine echte Patienten- oder Behandlungsinformation eingeben. © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-Mitwirkende</a>.</div>
+ </div>`;
+}
+function updateDoctorPanel(t){
+ const container=document.querySelector(`[data-doctor-panel="${t.id}"]`);
+ if(!container)return;
+ const tmp=document.createElement('div');tmp.innerHTML=doctorLookupHtml(t);
+ container.replaceWith(tmp.firstElementChild);
+ document.querySelectorAll('[data-action="searchDoctor"]').forEach(b=>b.disabled=doctorBusy);
+}
+function resetDoctorOnChange(t){
+ t.doctorSuggestion=null;
+ doctorState.delete(String(t.id));
+ updateDoctorPanel(t);
+}
+async function searchDoctor(id){
+ const t=data.trips.find(x=>String(x.id)===String(id));
+ if(!t||doctorBusy)return;
+ const name=String(t.doctor||'').trim(),city=doctorCity(t);
+ if(name.length<3){doctorState.set(String(t.id),{status:'error',message:'Bitte zuerst mindestens drei Zeichen des Arztes oder Praxisnamens eingeben.'});updateDoctorPanel(t);return;}
+ const query=[name,city].filter(Boolean).join(', ');
+ const signature=JSON.stringify([t.doctor,t.to]);
+ doctorBusy=true;
+ doctorState.set(String(t.id),{status:'busy'});updateDoctorPanel(t);
+ try{
+   const key=query.toLocaleLowerCase('de-DE');
+   let rows=doctorCache.get(key);
+   if(!rows){
+     rows=await nominatimQuery({q:query,format:'jsonv2',addressdetails:'1',limit:'8',countrycodes:'de','accept-language':'de',dedupe:'1'});
+     if(!Array.isArray(rows))throw Error('Unerwartete Antwort des Suchdienstes.');
+     doctorCache.set(key,rows);
+   }
+   if(!data.trips.includes(t)||JSON.stringify([t.doctor,t.to])!==signature){doctorState.delete(String(t.id));return;}
+   const candidates=rows.map(r=>({name:String(r.name||String(r.display_name||'').split(',')[0]||'Unbenannter Standort'),address:locationText(r),osmId:String(r.osm_type||'')+'/'+String(r.osm_id||''),kind:String(r.type||'')}));
+   doctorState.set(String(t.id),candidates.length?{status:'results',results:candidates,message:candidates.length+' Standortvorschlag/Vorschläge gefunden. Bitte Eintrag und Adresse prüfen.'}:{status:'error',message:'Kein Eintrag zu „'+query+'“ gefunden. Das bedeutet nicht, dass die Arztpraxis nicht existiert. Prüfen Sie die Schreibweise oder die offizielle DGUV-/116117-Suche.'});
+ }catch(e){doctorState.set(String(t.id),{status:'error',message:(e?.name==='AbortError'?'Suchdienst hat nicht rechtzeitig geantwortet.':String(e?.message||'Suche derzeit nicht erreichbar.'))+' Die Adresse kann weiterhin manuell eingegeben werden.'});}
+ finally{doctorBusy=false;updateDoctorPanel(t)}
+}
+function pickDoctor(id,index){
+ const t=data.trips.find(x=>String(x.id)===String(id));const selected=doctorState.get(String(id))?.results?.[Number(index)];
+ if(!t||!selected)return;
+ t.doctorSuggestion={...selected};
+ // Der Nutzer entscheidet separat, ob eine bestehende Zieladresse ersetzt werden soll.
+ updateDoctorPanel(t);
+}
+function applyDoctorAddress(id){
+ const t=data.trips.find(x=>String(x.id)===String(id));
+ if(!t||!t.doctorSuggestion)return;
+ if(!t.doctorSuggestion.address){doctorState.set(String(id),{status:'error',message:'Zu diesem Treffer ist keine Adresse hinterlegt.'});updateDoctorPanel(t);return;}
+ t.to=t.doctorSuggestion.address;
+ markFareStale(t); // TODO: Bei geändertem Arztstandort auch die ÖPNV-Referenz entwerten.
+ const field=document.getElementById(`t${t.id}-to`);if(field)field.value=t.to;
+ clearRouteIfAddressChanged(t);
+ doctorState.set(String(id),{status:'chosen',message:'Vorgeschlagene Adresse in das Zielfeld übernommen. Kilometer bitte neu berechnen.'});
+ updateDoctorPanel(t);
+}
+function fareReferenceFor(t){
+ const net=FARE_REFERENCES[t.fareNetwork];
+ if(!net)return {status:'none',message:'Für diesen Tarifverbund ist hier keine Preisreferenz hinterlegt. Bitte offizielle Tarifauskunft und Fahrkarte prüfen.'};
+ if(!t.date||t.date<net.validFrom||t.date>net.validUntil)return {status:'date',message:`Die hinterlegte Referenz gilt nur vom ${net.validFrom.split('-').reverse().join('.')} bis ${net.validUntil.split('-').reverse().join('.')}. Für den Behandlungstag bitte historische Tarifdaten heranziehen.`};
+ const price=net.products[t.fareProduct]?.[t.fareLevel];
+ if(!Number.isFinite(price))return {status:'level',message:'Für diese Kombination aus Fahrschein und Preisstufe liegt keine geprüfte Preisreferenz vor. Bitte Ticketart und Preisstufe prüfen.'};
+ // Einzeltickets werden pro Teilstrecke benötigt. Das VRR-24h-Ticket gilt im Rahmen
+ // seiner Tarifbedingungen auch für die Rückfahrt. Bei mehreren Tagen/Terminen
+ // gibt es eine separate Mehrfachkostenbetrachtung in der bisherigen App.
+ const comparison=price*(t.fareProduct==='single'&&t.roundtrip?2:1);
+ const declared=String(t.ticket??'').trim();
+ if(!declared)return {status:'empty',comparison,unit:price,message:`Veröffentlichter ${net.name}-Referenzpreis: ${fmt(price)} pro ${t.fareProduct==='day'?'24-Stunden-Ticket':'Einzelfahrt'}; für die ausgewählte Fahrtkonstellation ${fmt(comparison)} pro Termin. Bitte nach tatsächlichem Ticketpreis die Kosten eintragen.`};
+ const diff=Math.round((num(declared)-comparison)*100)/100;
+ return {status:Math.abs(diff)<=0.01?'match':'difference',comparison,unit:price,diff,message:(Math.abs(diff)<=0.01?`✓ Der eingetragene Betrag ${fmt(num(declared))} entspricht der veröffentlichten Tarifreferenz für die von Ihnen ausgewählte Preisstufe.`:`Abweichung gegenüber dem veröffentlichten Referenzbetrag ${fmt(comparison)} pro Termin: ${diff>0?'+':''}${fmt(diff)}. Bitte Preisstufe, Ticketart, Rückfahrt und Beleg prüfen.`)+' Keine amtliche Validierung der Strecke, der Preisstufe oder der Erstattungsfähigkeit.'};
+}
+function fareStatusHtml(t){
+ const ref=fareReferenceFor(t);
+ const state=transitState.get(String(t.id));
+ const cls=ref.status==='match'?'good':ref.status==='difference'?'bad':['date','level'].includes(ref.status)?'warn':'';
+ const refUrl=FARE_REFERENCES[t.fareNetwork]?.source;
+ return `<div class="fare-status ${cls}" data-fare-status="${t.id}" role="status" aria-live="polite"><strong>Tariftabellen-Abgleich:</strong> ${h(ref.message)}${refUrl?` <a href="${h(refUrl)}" target="_blank" rel="noopener noreferrer">Offizielle Preistabelle ↗</a>`:''}</div>`;
+}
+function fareLiveHtml(t){
+ const state=transitState.get(String(t.id));
+ if(state?.status==='busy')return '<div class="fare-status" role="status">Verbindung und mögliche Fahrpreisangebote werden gesucht …</div>';
+ if(state?.status==='error')return `<div class="fare-status warn" role="status">${h(state.message)}</div>`;
+ if(state?.status==='ok')return `<div class="fare-status">${h(state.message)}${state.referenceDate?`<br><small>Auskunft für: ${h(state.referenceDate)} (keine historische Tarifprüfung).</small>`:''}</div>${state.offers?.length?`<div class="fare-offers">${state.offers.map((o,i)=>`<div class="fare-offer"><div><strong>${h(o.name)} · ${fmt(o.price)}</strong><small>Unverbindliches DB-Verbindungsangebot, ein Weg; Auswahl ersetzt keine Fahrkarte</small></div><button class="btn" type="button" data-action="applyFareOffer" data-id="${t.id}" data-offer="${i}">Als Betrag übernehmen</button></div>`).join('')}</div>`:''}`;
+ return '<div class="fare-status">Noch keine Verbindungsauskunft abgefragt. Bei fehlenden Preisen kann die Fahrkarte weiterhin manuell eingetragen und mit offiziellen Tarifinformationen verglichen werden.</div>';
+}
+function farePanelHtml(t){
+ if(t.transport!=='ÖPNV')return '';
+ const net=FARE_REFERENCES[t.fareNetwork],levelOpts=net?Object.keys(net.products[t.fareProduct]||{}):[];
+ const productOpts=Object.entries(FARE_PRODUCTS).map(([k,n])=>`<option value="${k}" ${t.fareProduct===k?'selected':''}>${h(n)}</option>`).join('');
+ return `<section class="fare-panel" data-fare-panel="${t.id}">
+ <div class="fare-header"><strong>🚉 ÖPNV-Fahrpreis plausibilisieren</strong><button type="button" class="btn" data-action="queryFare" data-id="${t.id}" ${transitBusy?'disabled':''}>⌕ Verbindung & mögliche Ticketpreise abrufen</button></div>
+ <div class="fare-note">Für eine <b>optionale, aktuelle</b> Verbindungsauskunft werden erst nach Klick die Start-/Zieladressen über Nominatim aufgelöst und als Koordinaten an die Community-Schnittstelle <a href="https://v6.db.transport.rest/" target="_blank" rel="noopener noreferrer">v6.db.transport.rest</a> übermittelt. Preise sind nicht auf allen Linien verfügbar. <b>Keine amtliche Preisprüfung</b>; nur fiktive Adressen eingeben.</div>
+ <div data-fare-live="${t.id}">${fareLiveHtml(t)}</div>
+ <div class="fare-grid">
+ <div class="field"><label for="t${t.id}-fareNetwork">Tarifraum (vom Ticket ablesen)</label><select id="t${t.id}-fareNetwork" data-trip="${t.id}" data-tripfield="fareNetwork"><option value="" ${!t.fareNetwork?'selected':''}>Bitte wählen</option><option value="VRR" ${t.fareNetwork==='VRR'?'selected':''}>VRR (Rhein-Ruhr)</option><option value="VRS" ${t.fareNetwork==='VRS'?'selected':''}>VRS (Rheinland)</option><option value="Andere" ${t.fareNetwork==='Andere'?'selected':''}>Anderer Tarif / NRW-Tarif</option></select></div>
+ <div class="field"><label for="t${t.id}-fareProduct">Fahrscheinart</label><select id="t${t.id}-fareProduct" data-trip="${t.id}" data-tripfield="fareProduct">${productOpts}</select></div>
+ <div class="field"><label for="t${t.id}-fareLevel">Preisstufe laut Ticket</label><select id="t${t.id}-fareLevel" data-trip="${t.id}" data-tripfield="fareLevel"><option value="" ${!t.fareLevel?'selected':''}>Nicht bekannt / auswählen</option>${levelOpts.map(z=>`<option value="${h(z)}" ${t.fareLevel===z?'selected':''}>${h(z)}</option>`).join('')}</select></div>
+ <div class="fare-note">Bitte Tarifraum und Preisstufe eigenständig anhand der Fahrkarte/Verbindung auswählen. Die App ordnet eine Adresse nicht automatisch einem Tarifgebiet zu. Bei Zeitkarten oder eezy ist ein exakter Einzelpreisvergleich ohne weitere Daten nicht möglich.</div>
+ </div>
+ ${fareStatusHtml(t)}
+ <div class="fare-note">Preisreferenzen ab 01.06.2026 (begrenzt auf 2026): VRR-/VRS-Tabellen. Die Fahrtkostenangabe oben bezieht sich auf <b>einen Behandlungstermin</b>; die Anzahl Termine wird in der Übersicht gesondert multipliziert. Nicht jedes Datum und nicht jede Ticketart lässt sich damit prüfen.</div>
+ </section>`;
+}
+function updateFarePanel(t,keepFocus=false){
+ const holder=document.querySelector(`[data-fare-panel="${t.id}"]`);
+ if(holder){holder.outerHTML=farePanelHtml(t)}
+ const total=document.querySelector(`[data-tripcontainer="${t.id}"] .trip-total`);
+ if(total)total.innerHTML=tripTotal(t);
+}
+function markFareStale(t){
+ transitState.delete(String(t.id));
+ t.fareQuote=null;
+}
+function parseDbOffers(journey){
+ const offers=[];
+ // Ticketpreisobjekt (DB-Vendo-Client): priceObj.amount ist in CENT.
+ // Andere Datenformate nur übernehmen, wenn Einheit eindeutig und Betrag plausibel ist.
+ for(const x of Array.isArray(journey.tickets)?journey.tickets:[]){
+  const cents=Number(x?.priceObj?.amount);
+  const eur=Number(x?.price?.amount);
+  const value=Number.isFinite(cents)&&cents>0?cents/100:Number.isFinite(eur)&&eur>0&&(!x?.price?.currency||x.price.currency==='EUR')?eur:null;
+  if(value!==null&&Number.isFinite(value)&&value>0&&value<500){offers.push({name:String(x.name||'Ticketangebot'),price:value})}
+ }
+ return offers;
+}
+async function queryFare(id){
+ const t=data.trips.find(x=>String(x.id)===String(id));if(!t||transitBusy||t.transport!=='ÖPNV')return;
+ const from=String(t.from||'').trim(),to=String(t.to||'').trim();
+ if(from.length<5||to.length<5){transitState.set(String(id),{status:'error',message:'Bitte zunächst Start- und Zieladresse vollständig angeben.'});updateFarePanel(t);return;}
+ const snapshot=JSON.stringify([from,to,t.date,t.transport]);
+ transitBusy=true;transitState.set(String(id),{status:'busy'});updateFarePanel(t);
+ try{
+  const a=await geoSearch(from),b=await geoSearch(to);
+  // Bei bereits zurückliegenden Behandlungsdaten bewusst nur AKTUELLE Verbindungen zeigen.
+  const now=new Date(),requested=t.date?new Date(t.date+'T10:00:00'):null;
+  const departure=requested&&requested.getTime()>Date.now()?requested:now;
+  const query=new URLSearchParams({'from.latitude':String(a.lat),'from.longitude':String(a.lon),'from.address':from,'to.latitude':String(b.lat),'to.longitude':String(b.lon),'to.address':to,departure:departure.toISOString(),results:'2',tickets:'true',language:'de',nationalExpress:'false',national:'false'});
+  const res=await jsonFetch('https://v6.db.transport.rest/journeys?'+query);
+  const journeys=Array.isArray(res?.journeys)?res.journeys:[];
+  if(!journeys.length)throw Error('Für diese Adressen wurde keine Verbindung gefunden. Bitte Haltestellen oder offizielle Tarifauskunft prüfen.');
+  let offers=[];
+  // Je nach API-Version werden Tarifangebote erst im Refresh geliefert.
+  for(const j of journeys.slice(0,2)){
+   offers.push(...parseDbOffers(j));
+   if(!offers.length&&j.refreshToken){
+    try{const refreshed=await jsonFetch('https://v6.db.transport.rest/journeys/'+encodeURIComponent(j.refreshToken)+'?tickets=true&language=de');offers.push(...parseDbOffers(refreshed?.journey||{}));}catch(_){/* andere Verbindung versuchen */}
+   }
+   if(offers.length)break;
+  }
+  if(JSON.stringify([t.from,t.to,t.date,t.transport])!==snapshot){transitState.delete(String(id));return}
+  const dedup=[...new Map(offers.map(o=>[o.name+'|'+o.price.toFixed(2),o])).values()].slice(0,6);
+  const days=departure.toLocaleDateString('de-DE');
+  transitState.set(String(id),{status:'ok',offers:dedup,referenceDate:days,message:dedup.length?`Verbindung gefunden; ${dedup.length} mögliche(s) Tarifangebot(e). Preis, Tarifgültigkeit und Erstattung sind nicht offiziell bestätigt.`:'Verbindung gefunden, aber der Dienst liefert derzeit keinen auswertbaren Ticketpreis. Tariftabellen-Abgleich oder Fahrkartenbeleg verwenden.'});
+ }catch(e){transitState.set(String(id),{status:'error',message:(e?.name==='AbortError'?'Zeitüberschreitung der Verkehrsauskunft.':String(e?.message||'Tarifauskunft nicht erreichbar.'))+' Manuelle Ticketangabe bleibt möglich.'});}
+ finally{transitBusy=false;updateFarePanel(t)}
+}
+function applyFareOffer(id,index){
+ const t=data.trips.find(x=>String(x.id)===String(id)),offer=transitState.get(String(id))?.offers?.[Number(index)];if(!t||!offer)return;
+ // Der externe Preis wird als EIN Weg gelesen; im Formular steht EUR je Termin.
+ // Für Deutschlandticket/eezy/Mehrfahrtenkarten ist keine automatische Umrechnung zulässig.
+ const amount=offer.price*(t.roundtrip?2:1);
+ t.ticket=amount.toFixed(2);
+ t.fareQuote={name:offer.name,price:offer.price,checkedAt:new Date().toISOString(),kind:'unverbindliches Verbindungsangebot'};
+ const element=document.getElementById(`t${t.id}-ticket`);if(element)element.value=t.ticket;
+ updateFarePanel(t);
+}
+function renderTrip(t,i){const isCost=t.transport!=='PKW';return `<section class="journey-card" data-tripcontainer="${t.id}"><div class="journey-top"><strong>Fahrt ${i+1}</strong>${data.trips.length>1?`<button type="button" class="mini red" data-action="removeTrip" data-id="${t.id}">✕ Fahrt entfernen</button>`:''}</div><div class="form-grid">
+${tf(t,'date','Behandlungsdatum',{type:'date',required:true})}${tf(t,'doctor','Einrichtung / Arztpraxis',{required:true,placeholder:'Name des Arztes, der Praxis oder Klinik'})}
+${doctorLookupHtml(t)}
+${tf(t,'purpose','Anlass der Fahrt',{full:true,items:['Ambulante Behandlung','Stationäre Behandlung','Physiotherapie / Rehabilitation','Nachuntersuchung','Sonstiges']})}
+${tf(t,'from','Von (Startadresse)',{required:true,placeholder:'Straße, PLZ Ort'})}${tf(t,'to','Nach (Zieladresse)',{required:true,placeholder:'Arztpraxis / Adresse'})}
+<div class="route-tools">
+  <div class="route-tool-head"><span class="route-tool-title">📍 Automatische Kilometerberechnung</span><button class="btn" type="button" data-action="calculateRoute" data-id="${t.id}" ${routeBusy?'disabled':''}>⌖ Strecke berechnen</button></div>
+  <div class="route-message" data-route-message="${t.id}" role="status" aria-live="polite">${routeMessage(t)}</div>
+  <div class="route-sources">Mit Klick werden ausschließlich die eingegebenen Start- und Zieladressen an <a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Nominatim</a> und die gefundenen Koordinaten an <a href="https://project-osrm.org/" target="_blank" rel="noopener noreferrer">OSRM</a> übermittelt. © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-Mitwirkende</a>. Nur für Testdaten.</div>
+</div>
+<div class="triple full">${tf(t,'transport','Verkehrsmittel',{items:['PKW','ÖPNV','Taxi','Krankentransport','Sonstiges']})}${tf(t,'distance','Einfache Strecke (km)',{type:'number',min:'0',step:'0.1',placeholder:'12'})}${tf(t,'count','Anzahl der Fahrten / Termine',{type:'number',min:'1',step:'1'})}</div>
+<div class="full choice-row"><div class="checkline"><input type="checkbox" id="rt${t.id}" data-trip="${t.id}" data-tripfield="roundtrip" ${t.roundtrip?'checked':''}><label for="rt${t.id}">Hin- und Rückfahrt</label></div><div class="checkline"><input type="checkbox" id="escort${t.id}" data-trip="${t.id}" data-tripfield="escort" ${t.escort?'checked':''}><label for="escort${t.id}">Begleitperson war erforderlich</label></div></div>
+${tf(t,'parking','Parkkosten (€) <span class="optional">(optional)</span>',{type:'number',min:'0',step:'.01',placeholder:'0,00'})}${tf(t,'ticket','Fahrkarte / sonstige Kosten (€) <span class="optional">(optional)</span>',{type:'number',min:'0',step:'.01',placeholder:'0,00'})}
+${farePanelHtml(t)}
+${tf(t,'note','Bemerkungen <span class="optional">(optional)</span>',{area:true,full:true})}
+</div><div class="trip-total">${t.transport==='PKW'?'Kilometer insgesamt: <b>'+h((num(t.distance)*(t.roundtrip?2:1)*Math.max(1,num(t.count))).toLocaleString('de-DE',{maximumFractionDigits:1}))+' km</b>': 'Verkehrsmittel: <b>'+h(t.transport)+'</b>'} &nbsp; · &nbsp; Eingetragene Zusatzkosten: <b>${fmt((num(t.parking)+num(t.ticket))*Math.max(1,num(t.count)))}</b><br><span class="footnote">Keine verbindliche Berechnung des Erstattungsanspruchs. ${t.distanceSource==='OSRM'?'Entfernung automatisch ermittelt (OSRM); manuell änderbar.':''}</span></div></section>`}
+function renderJourneys(){return `${heading(1,'Geben Sie Ihre Fahrten und den Anlass der Behandlung an.')}
+<div class="journey-header"><h3>Meine Fahrten (${data.trips.length})</h3><button type="button" class="btn" data-action="addTrip">＋ Fahrt hinzufügen</button></div>
+${data.trips.map(renderTrip).join('')}
+<div class="info"><i>i</i><div>Die neue ÖPNV-Tarifprüfung vergleicht nur ausgewählte Tickettypen, Preisstufen und Tarifzeiträume; der Verbindungspreis ist gegebenenfalls lediglich ein unverbindliches Angebot. Die Praxissuche bietet OpenStreetMap-Standortvorschläge, keine amtliche Arztidentitätsprüfung. Bei mehreren Behandlungsterminen können Sie weitere Fahrten hinzufügen. Streckenangaben, Fahrtanzahl und Zusatzkosten werden für die Prüfübersicht erfasst. Die automatische Strecke nutzt eine Straßenroute für PKW und muss fachlich geprüft werden (z. B. kürzeste oder wirtschaftlichste Wegstrecke). Ob und in welcher Höhe Kosten erstattet werden, ist nicht Gegenstand dieser Demo.</div></div>${actions()}`}
+
+// OCR runs only after explicit action on a selected document. No receipt bytes sent to an API.
+// Runtime: Tesseract.js 6 (LSTM/WASM) for images and image PDFs, PDF.js 4.10.38 for searchable PDFs.
+// The CDN only delivers software/model files; the document is processed locally in the browser.
+const OCR_TESS_URL='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
+const OCR_PDF_URL='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
+const OCR_PDF_WORKER='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+let ocrRuntime=null, pdfRuntime=null;
+function loadOCRScript(){
+ if(window.Tesseract)return Promise.resolve(window.Tesseract);
+ if(ocrRuntime)return ocrRuntime;
+ ocrRuntime=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=OCR_TESS_URL;script.crossOrigin='anonymous';script.onload=()=>window.Tesseract?resolve(window.Tesseract):reject(Error('OCR-Bibliothek nicht verfügbar'));script.onerror=()=>reject(Error('OCR-Bibliothek konnte nicht geladen werden (Netzwerk/CDN).'));document.head.append(script)});
+ return ocrRuntime.catch(e=>{ocrRuntime=null;throw e});
+}
+async function loadPDF(){
+ if(!pdfRuntime)pdfRuntime=import(OCR_PDF_URL).then(lib=>{lib.GlobalWorkerOptions.workerSrc=OCR_PDF_WORKER;return lib}).catch(e=>{pdfRuntime=null;throw e});
+ return pdfRuntime;
+}
+const OCR_FIELD_LABELS={date:'Behandlungs-/Fahrtdatum',doctor:'Arzt / Praxis (Vorschlag)',address:'Praxis-/Zieladresse (Vorschlag)',from:'Startadresse (falls genannt)',amount:'Betrag (€)'};
+const OCR_KIND_LABELS={doctor:'Arztbescheinigung / Termin',transit:'ÖPNV-Fahrkarte',parking:'Parkbeleg',other:'Sonstiger Beleg'};
+const ocrCurrentFile=(idx)=>data.files[Number(idx)];
+function parseEuro(s){const v=String(s||'').replace(/[^0-9,.]/g,'');if(!v)return '';
+ let normalized=v;if(v.includes(',')&&v.includes('.'))normalized=v.lastIndexOf(',')>v.lastIndexOf('.')?v.replace(/\./g,'').replace(',','.'):v.replace(/,/g,'');else if(v.includes(','))normalized=v.replace(',','.');
+ const x=Number(normalized);return Number.isFinite(x)&&x>=0&&x<=10000?x.toFixed(2):'';
+}
+function dateToISO(raw){const m=String(raw).match(/\b(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})\b/);if(!m)return '';
+ let year=Number(m[3]);if(year<100)year=year<=40?2000+year:1900+year;
+ const mo=Number(m[2]),day=Number(m[1]),date=new Date(Date.UTC(year,mo-1,day));
+ return year>=1990&&year<=2100&&date.getUTCFullYear()===year&&date.getUTCMonth()===mo-1&&date.getUTCDate()===day?`${year}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`:'';
+}
+// All generated values are hypotheses. Never claim a register check, invoice authenticity or payable sum.
+function parseReceipt(text){
+ const raw=String(text||'').replace(/\r/g,'\n').replace(/[\t\u00a0]+/g,' ').replace(/\u00ad/g,'');
+ const lines=raw.split(/\n/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);
+ const full=lines.join(' | ').toLowerCase();
+ const kind=/\b(parkgebühr|parkticket|parkhaus|parken|parkbeleg|parkschein)\b/i.test(full)?'parking':/\b(fahrschein|einzelticket|fahrkarte|verkehrsbetriebe|öpnv|ticketpreis|vrr|vrs|buslinie|db regio|deutsche bahn)\b/i.test(full)?'transit':/\b(praxis|ärztl|behandlung|krankenhaus|klinikum|sprechstunde|dr\.\s*med|terminbestätigung)\b/i.test(full)?'doctor':'other';
+ let date='',dateScore=-1,doctor='',address='',from='',amount='',amountScore=-1;
+ const addressPattern=/([\p{L}0-9][\p{L}\d.'’\-/ ]{1,75}?(?:straße|str\.|weg|platz|allee|gasse|ring|damm|ufer|chaussee|steig|markt)\s*\d{1,4}\s*[a-zA-Z]?(?:\s*[,;]\s*|\s+))(?:D-)?(\d{5})\s+([\p{L}][\p{L}\s\-]{1,40})/iu;
+ const addressCandidates=[];
+ for(let i=0;i<lines.length;i++){
+  const line=lines[i],before=lines.slice(Math.max(0,i-3),i+1).join(' ');
+  const dm=line.match(/\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b/g)||[];
+  for(const d of dm){const iso=dateToISO(d);if(!iso)continue;
+   const ctx=lines.slice(Math.max(0,i-1),i+1).join(' ').toLowerCase();
+   let score=/behandlungsdatum|behandlung am|fahrtdatum|datum der behandlung|termin am|reise am/i.test(ctx)?12:/fahrt|termin|behandlung|gültig am|gültigkeit/i.test(ctx)?7:/rechnung|ausstellung|buchung/i.test(ctx)?1:3;
+   if(score>dateScore){date=iso;dateScore=score;}
+  }
+  // Dates (e.g. 12.04.2026) are removed BEFORE looking for currency amounts.
+  const priceCtx=/€|\bEUR\b|gesamtbetrag|endbetrag|rechnungsbetrag|zu zahlen|summe|ticketpreis|gesamtpreis|brutto|betrag|preis|kosten|fahrpreis|entgelt/i.test(line);
+  const moneyLine=line.replace(/\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b/g,' ');
+  const amountPattern=/(?:\bEUR\s*)?(\d{1,5}(?:[.,]\d{3})*[.,]\d{2})\s*(?:€|EUR)?/gi;
+  let amtMatch;
+  while(priceCtx&&(amtMatch=amountPattern.exec(moneyLine))!==null){
+   const val=parseEuro(amtMatch[1]);if(!val)continue;
+   const symbol=/€|EUR/i.test(amtMatch[0]);
+   let score=(symbol?4:0)+(/gesamtbetrag|endbetrag|rechnungsbetrag|zu zahlen|summe|ticketpreis|gesamtpreis|brutto|betrag\s*:?/i.test(line)?10:0)+(/preis|kosten|gesamt|summe|entgelt|fahrkarte|fahrpreis/i.test(line)?4:0)-(/steuer|mwst|ust|rückgeld|netto|rabatt/i.test(line)?7:0);
+   if(score>amountScore){amount=val;amountScore=score;}
+  }
+  if(!doctor&&(/(?:^|\s)(?:dr\.?\s*(?:med\.?)?\s+[\p{L}][\p{L} .-]{3,}|(?:arzt|gemeinschafts)?praxis\s+[\p{L}][\p{L} .-]{3,}|klinikum\s+[\p{L}][\p{L} .-]{3,}|krankenhaus\s+[\p{L}][\p{L} .-]{3,})/iu.test(line))){
+   doctor=line.slice(0,95).replace(/^.*?((?:Dr\.?|Praxis|Gemeinschaftspraxis|Klinikum|Krankenhaus)\b)/i,'$1');
+  }
+  let role=/^(?:von|start|einstieg|abfahrt|startadresse)\s*:/i.test(line)?'origin':/^(?:nach|ziel|ankunft|zieladresse|bis)\s*:/i.test(line)?'destination':'unknown';
+  for(const combined of [line,lines[i+1]?line+' '+lines[i+1]:'']){
+   const m=combined.match(addressPattern);if(!m)continue;
+   let street=m[1].trim().replace(/[,;]$/,'');
+   street=street.replace(/^.*?(?:\b(?:von|nach|start|ziel|einstieg|abfahrt|startadresse|zieladresse)\s*:\s*)/i,'');
+   street=street.replace(/^.*?\b(?:am|vom)\s+\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\s+/i,'');
+   street=street.replace(/\s+/g,' ').trim();
+   const addr=(street+', '+m[2]+' '+m[3].trim()).replace(/\s+/g,' ');
+   if(role==='origin')from=addr;
+   if(!addressCandidates.some(c=>c.addr===addr))addressCandidates.push({addr,role,score:role==='destination'?20:role==='origin'?-10:/praxis|ärzt|arzt|klinik|krankenhaus|behandl/i.test(before)?5:0,position:i});
+   break;
+  }
+  if(!from&&role==='origin'){
+   const candidate=line.replace(/^[^:]*:/,'').trim();if(candidate.length>=8&&candidate.length<120)from=candidate;
+  }
+ }
+ addressCandidates.sort((a,b)=>b.score-a.score||a.position-b.position);
+ address=kind==='transit'?(addressCandidates.find(c=>c.role==='destination')?.addr||''):(addressCandidates[0]?.addr||'');
+ return {kind,fields:{date,doctor,address,from,amount},lines:lines.length};
+}
+function ocrMatchInfo(file){if(!file.ocr)return '';
+ const x=file.ocr.fields||{},t=data.trips.find(t=>String(t.id)===String(file.ocr.tripId))||data.trips[0];
+ if(!t)return 'Keine passende Fahrt angelegt.';
+ let msg=[];
+ if(x.date)msg.push(t.date?(x.date===t.date?'✓ Datum stimmt mit der gewählten Fahrt überein.':'⚠ Datum weicht von der gewählten Fahrt ab.'):'Datum noch nicht eingetragen.');
+ if(x.amount&&file.ocr.kind==='transit')msg.push(t.ticket?(Math.abs(num(t.ticket)-num(x.amount))<0.01?'✓ Betrag entspricht den erfassten Ticketkosten.':'⚠ Betrag weicht von den Ticketkosten der Fahrt ab.'):'ÖPNV-Kosten sind noch nicht erfasst.');
+ if(x.amount&&file.ocr.kind==='parking')msg.push(t.parking?(Math.abs(num(t.parking)-num(x.amount))<0.01?'✓ Betrag entspricht den Parkkosten.':'⚠ Betrag weicht von den Parkkosten ab.'):'Parkkosten sind noch nicht erfasst.');
+ if(x.address&&t.to)msg.push('Zieladresse anhand des Belegs manuell vergleichen.');
+ return msg.join(' ');
+}
+function receiptFieldControl(f,i,key){const o=f.ocr,datum=o.fields?.[key]||'';const nonEmpty=Boolean(datum);
+ const allowAmount=key!=='amount'||['transit','parking'].includes(o.kind);
+ return `<div class="field"><label for="ocr${i}-${key}">${h(OCR_FIELD_LABELS[key])}</label><input id="ocr${i}-${key}" data-ocr-edit="${h(key)}" data-file="${i}" value="${h(datum)}" ${key==='date'?'type="date"':''} ${key==='amount'?'inputmode="decimal"':''} placeholder="${key==='amount'?'0,00':'Kein eindeutiger Treffer'}" aria-label="${h(OCR_FIELD_LABELS[key])}"><label class="ocr-check"><input type="checkbox" data-ocr-select="${h(key)}" data-file="${i}" ${nonEmpty&&allowAmount?'checked':''} ${!nonEmpty||!allowAmount?'disabled':''}> Für Fahrt übernehmen</label></div>`;
+}
+function ocrPanelForFile(f,i){const o=f.ocr;
+ return `<div class="ocr-file" data-ocr-card="${i}"><div class="ocr-file-head"><strong>▤ ${h(f.name)}</strong><button class="btn" type="button" data-action="runOCR" data-file="${i}" ${ocrBusy?'disabled':''}>${o?'↻ Erneut erkennen':'✦ Text erkennen'}</button></div>
+ <div class="ocr-state ${o?.error?'error':o?'success':''}" role="status">${ocrBusy&&ocrActiveFile===f?'OCR läuft. Bitte dieses Fenster geöffnet lassen.':o?.error?h(o.error):o?`Text ausgewertet (${h(o.method||'lokal')}). Vorschläge bitte prüfen.`:'Noch keine Erkennung durchgeführt.'}</div>
+ ${ocrBusy&&ocrActiveFile===f?`<progress class="ocr-progress" data-ocr-progress="${i}" value="0" max="100"></progress><div class="footnote" data-ocr-progress-text="${i}">Modell und Dokument werden vorbereitet…</div>`:''}
+ ${o&&!o.error?`<div class="field ocr-kind"><label for="ocr-kind-${i}">Belegart (änderbar)</label><select id="ocr-kind-${i}" data-ocr-kind="${i}">${Object.entries(OCR_KIND_LABELS).map(([k,v])=>`<option value="${k}" ${o.kind===k?'selected':''}>${h(v)}</option>`).join('')}</select></div>
+ <div class="field ocr-kind"><label for="ocr-trip-${i}">Zuordnung zur Fahrt</label><select id="ocr-trip-${i}" data-ocr-trip="${i}">${data.trips.map((t,n)=>`<option value="${h(t.id)}" ${String(o.tripId)===String(t.id)?'selected':''}>Fahrt ${n+1} · ${h(t.date?deDate(t.date):'ohne Datum')} · ${h(t.doctor||'ohne Praxis')}</option>`).join('')}</select></div>
+ <div class="ocr-metadata">${Object.keys(OCR_FIELD_LABELS).map(k=>receiptFieldControl(f,i,k)).join('')}</div>
+ <div class="ocr-compare ${ocrMatchInfo(f).includes('⚠')?'diff':''}" role="status">${h(ocrMatchInfo(f)||'Noch kein eindeutiger Vergleich möglich.')}</div>
+ <div class="ocr-file-buttons"><button type="button" class="btn primary" data-action="applyOCR" data-file="${i}">✓ Markierte Angaben übernehmen</button></div>
+ <details class="ocr-raw"><summary>Erkannten Belegtext ansehen (nur lokal, zur Kontrolle)</summary><pre>${h((o.text||'').slice(0,12000))}</pre></details>
+ <p class="ocr-hint">Erkannte Werte sind unverbindliche Vorschläge. Adressen können Patienten-, Praxis- oder Firmenadressen sein. Beträge, Datum und Art des Belegs müssen durch eine Person geprüft werden.</p>`:''}</div>`;
+}
+function ocrSection(){return `<section class="ocr-area" id="ocrArea"><div class="ocr-intro"><div><h3>✦ KI-gestützte Texterkennung (OCR)</h3><p>Arztbescheinigungen, Fahrkarten und Quittungen direkt im Browser auswerten. Das Modell erkennt Schrift; Datum, Adresse, Praxis und Betrag werden anschließend als bearbeitbare Vorschläge extrahiert. <strong>Keine automatische Datenübernahme.</strong></p></div></div>
+ ${data.files.length?data.files.map(ocrPanelForFile).join(''):'<p class="ocr-hint">Bitte zuerst einen Beleg hochladen.</p>'}
+ <div class="ocr-warning">Datenschutz / Demo: Dokumente bleiben auf deinem Gerät. Für die erste Erkennung werden OCR-Software und Sprachmodelle aus einem CDN heruntergeladen; PDF.js wird bei PDF-Dateien ebenfalls nachgeladen. Die App sendet keine Dokumentdateien an diesen Dienst. Eine Internetverbindung wird beim ersten Start benötigt. Nur fiktive Testbelege verwenden.</div></section>`;}
+let ocrActiveFile=null;
+function ocrProgress(f,phase,n){if(!data.files.includes(f))return;const i=data.files.indexOf(f);
+ const text=document.querySelector(`[data-ocr-progress-text="${i}"]`),bar=document.querySelector(`[data-ocr-progress="${i}"]`);
+ if(text)text.textContent=phase;if(bar)bar.value=Math.min(100,Math.max(0,n||0));
+}
+function selectFileTrip(f){return data.trips.find(t=>t.date && f.ocr?.fields?.date===t.date)?.id||data.trips[0]?.id||''}
+async function createOCRWorker(f){const T=await loadOCRScript();return T.createWorker(['deu','eng'],1,{logger:msg=>{
+  const pct=Number.isFinite(msg.progress)?Math.round(msg.progress*100):0;
+  ocrProgress(f,msg.status?`OCR-Modell: ${msg.status} (${pct} %)`:'OCR-Modell wird geladen…',pct);
+ }});}
+async function runOCR(index){const f=data.files[index];if(!f||!f.raw||ocrBusy)return;
+ ocrBusy=true;ocrActiveFile=f;f.ocr=null;if(currentStep===2)render();let worker=null;
+ try{
+  let documentText='',method='LSTM-OCR im Browser';
+  if(f.mime==='application/pdf'){
+   ocrProgress(f,'PDF wird lokal geöffnet…',4);
+   const lib=await loadPDF();const pdf=await lib.getDocument({data:new Uint8Array(await f.raw.arrayBuffer())}).promise;
+   const pages=Math.min(pdf.numPages,3);if(pdf.numPages>pages)method+=' (nur die ersten 3 Seiten)';
+   for(let pageNo=1;pageNo<=pages;pageNo++){
+    const page=await pdf.getPage(pageNo);
+    const tc=await page.getTextContent();const text=(tc.items||[]).map(i=>(i.str||'')+(i.hasEOL?'\n':' ')).join('').trim();
+    if(text.replace(/\s/g,'').length>=45){documentText+=text+'\n';method='PDF-Textauslesung'+(pdf.numPages>3?' (max. 3 Seiten)':'');ocrProgress(f,`PDF-Seite ${pageNo}/${pages}: Text direkt gelesen`,100*pageNo/pages);}
+    else{
+     if(!worker)worker=await createOCRWorker(f);
+     ocrProgress(f,`PDF-Seite ${pageNo}/${pages} als Bild erkannt…`,Math.round((pageNo-1)/pages*100));
+     const viewport=page.getViewport({scale:Math.min(2.2,1600/page.getViewport({scale:1}).width)});
+     const cv=document.createElement('canvas');cv.width=Math.round(viewport.width);cv.height=Math.round(viewport.height);
+     await page.render({canvasContext:cv.getContext('2d',{alpha:false}),viewport}).promise;
+     const recognized=await worker.recognize(cv);documentText+=(recognized.data?.text||'')+'\n';cv.width=0;cv.height=0;
+    }
+    page.cleanup();
+   }
+   await pdf.destroy();
+  }else{
+   worker=await createOCRWorker(f);ocrProgress(f,'Bild wird lokal gelesen…',12);
+   const recognized=await worker.recognize(f.raw);documentText=recognized.data?.text||'';
+  }
+  if(!data.files.includes(f))return;
+  const parsed=parseReceipt(documentText);if(!documentText.trim())throw Error('Kein auswertbarer Text gefunden. Bitte besser lesbaren Beleg verwenden oder Daten manuell erfassen.');
+  f.ocr={...parsed,text:documentText.slice(0,50000),method,tripId:'',processedAt:new Date().toISOString(),confirmed:false};f.ocr.tripId=selectFileTrip(f);
+ }catch(e){if(data.files.includes(f))f.ocr={error:`Erkennung nicht möglich: ${e.message||'Unbekannter Fehler'}. Bitte gegebenenfalls manuell erfassen.`,fields:{},text:'',kind:'other'};}
+ finally{if(worker)try{await worker.terminate()}catch{};ocrBusy=false;ocrActiveFile=null;if(currentStep===2&&!submitted)render();}
+}
+function applyOCR(index){const f=data.files[index],o=f?.ocr;if(!o||o.error)return;
+ const t=data.trips.find(t=>String(t.id)===String(o.tripId));if(!t){alert('Bitte ordnen Sie den Beleg zunächst einer Fahrt zu.');return;}
+ const mapping={date:'date',doctor:'doctor',address:'to',from:'from',amount:o.kind==='transit'?'ticket':o.kind==='parking'?'parking':null};
+ let selected=[],conflicts=[];
+ for(const [field,target] of Object.entries(mapping)){
+  const input=document.querySelector(`[data-ocr-edit="${field}"][data-file="${index}"]`);
+  const selectedBox=document.querySelector(`[data-ocr-select="${field}"][data-file="${index}"]`);
+  const value=input?.value.trim()||'';
+  if(!selectedBox?.checked||!value||!target)continue;
+  if(field==='date'&&!/^\d{4}-\d{2}-\d{2}$/.test(value)){alert('Bitte ein gültiges Datum auswählen.');return;}
+  if(field==='amount'&&parseEuro(value)===''){alert('Bitte einen gültigen Betrag eingeben.');return;}
+  const newValue=field==='amount'?parseEuro(value):value;
+  selected.push([target,newValue]);
+  if(String(t[target]||'').trim()!==''&&String(t[target]).trim()!==String(newValue).trim())conflicts.push(`${OCR_FIELD_LABELS[field]}: vorhandener Wert „${t[target]}“ → „${newValue}“`);
+ }
+ if(!selected.length){alert('Bitte wenigstens einen zutreffenden Wert zur Übernahme auswählen.');return;}
+ const msg=conflicts.length?`Folgende Angaben werden überschrieben:\n\n${conflicts.join('\n')}\n\nAngaben übernehmen?`:`${selected.length} geprüfte(r) Wert(e) in die ausgewählte Fahrt übernehmen?`;
+ if(!confirm(msg))return;
+ const changed=new Set();for(const [k,v] of selected){if(t[k]!==v)changed.add(k);t[k]=v;}
+ if(changed.has('to')||changed.has('from')){clearRouteIfAddressChanged(t);markFareStale(t);}
+ if(changed.has('doctor'))resetDoctorOnChange(t);
+ if(changed.has('ticket')){t.fareQuote=null;markFareStale(t);}
+ o.confirmed=true;o.confirmedAt=new Date().toISOString();o.appliedKeys=selected.map(([k])=>k);
+ alert('Geprüfte Angaben wurden der ausgewählten Fahrt zugeordnet. Bitte den gesamten Antrag in Schritt 4 erneut kontrollieren.');render();
+}
+
+function renderFiles(){const saved=data.files;return `${heading(2,'Laden Sie eine ärztliche Bescheinigung oder Terminbestätigung hoch.')}
+<div class="upload-columns"><div><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Datei hochladen"><div><div class="cloud">☁</div><strong>Datei hier ablegen oder auswählen</strong><span class="footnote">Arztbescheinigung, Terminbestätigung, Fahrkarte oder Parkbeleg</span><br><button type="button" class="btn" data-action="openPicker">Datei auswählen</button><div class="footnote">PDF, JPG oder PNG · max. 10 MB pro Datei</div></div></div><h3 style="font-size:15px;color:#1b527e;margin:19px 0 10px">Hochgeladene Dateien (${saved.length})</h3><div class="uploads">${saved.length?saved.map((file,i)=>`<div class="upload-item"><span class="file-icon ${file.mime==='application/pdf'?'pdf':''}">${file.mime==='application/pdf'?'PDF':'BILD'}</span><div class="file-text"><strong>${h(file.name)}</strong><small>${Math.round(file.size/1024)} KB</small></div><div class="file-actions"><button type="button" class="mini" data-action="preview" data-file="${i}">Ansehen</button><button type="button" class="mini red" data-action="removeFile" data-file="${i}">Entfernen</button></div></div>`).join(''):'<div class="footnote">Noch keine Dateien ausgewählt.</div>'}</div></div>
+<div class="preview"><h4>Belegvorschau</h4><div class="preview-content">${saved.length&&saved[previewIndex]&&saved[previewIndex].url?(saved[previewIndex].mime==='application/pdf'?`<iframe src="${h(saved[previewIndex].url)}" title="PDF-Vorschau" style="width:100%;height:290px;border:0"></iframe>`:`<img src="${h(saved[previewIndex].url)}" alt="Vorschau des hochgeladenen Belegs">`):'<div class="placeholder"><span>▤</span>Wählen Sie eine Datei aus, um sie hier zu sehen.</div>'}</div></div></div>
+${ocrSection()}
+<div class="info"><i>i</i><div>Nur in dieser Sitzung verfügbare Testdateien. Die Dateien werden <strong>nirgendwo hochgeladen</strong>. Bitte keine echten Patientenunterlagen verwenden.</div></div>${actions()}`}
+function personSummary(){const p=data.person;return `<section class="summary-block"><div class="summary-header"><h3>♙ &nbsp;Stammdaten</h3><button type="button" data-edit="0">✎ Bearbeiten</button></div><div class="summary-grid">${[['Name',p.first+' '+p.last],['Geburtsdatum',deDate(p.dob)],['Straße',p.street],['PLZ / Ort',p.zip+' '+p.city],['Aktenzeichen',p.reference||'Nicht angegeben'],['Versichertennummer',p.insurance||'Nicht angegeben'],['IBAN',p.iban],['E-Mail',p.email||'Nicht angegeben']].map(([k,v])=>`<div class="sum-entry"><span>${k}</span><strong>${h(v)}</strong></div>`).join('')}</div></section>`}
+const deDate=date=>date?new Date(date+'T12:00:00').toLocaleDateString('de-DE'):'–';
+function tripsSummary(){return `<section class="summary-block"><div class="summary-header"><h3>🚙 &nbsp;Fahrtangaben (${data.trips.length})</h3><button type="button" data-edit="1">✎ Bearbeiten</button></div>${data.trips.map((t,i)=>`<div class="summary-grid ${i?'sum-line':''}"><div class="sum-entry"><span>Fahrt ${i+1} · Behandlungsdatum</span><strong>${h(deDate(t.date))}</strong></div><div class="sum-entry"><span>Arztpraxis</span><strong>${h(t.doctor)}</strong></div><div class="sum-entry"><span>Strecke</span><strong>${h(t.from)} → ${h(t.to)}</strong></div><div class="sum-entry"><span>Verkehrsmittel / Anzahl</span><strong>${h(t.transport)} · ${h(t.count)} Termin(e)</strong></div><div class="sum-entry"><span>Kilometer</span><strong>${h((num(t.distance)*(t.roundtrip?2:1)*num(t.count)).toLocaleString('de-DE',{maximumFractionDigits:1}))} km (gesamt)</strong></div><div class="sum-entry"><span>Zusatzkosten</span><strong>${fmt((num(t.parking)+num(t.ticket))*num(t.count))}</strong></div>${t.transport==='ÖPNV'?`<div class="sum-entry"><span>ÖPNV-Referenz</span><strong>${h(fareReferenceFor(t).message)}</strong></div>`:''}</div>`).join('')}</section>`}
+function filesSummary(){return `<section class="summary-block"><div class="summary-header"><h3>▤ &nbsp;Belege (${data.files.length})</h3><button type="button" data-edit="2">✎ Bearbeiten</button></div>${data.files.length?data.files.map((file)=>`<div style="padding:6px 0;color:#25547b;font-size:13px">✓ &nbsp;${h(file.name)} <span class="muted">(${Math.round(file.size/1024)} KB)</span>${file.ocr&&!file.ocr.error?`<div class="footnote">OCR: ${h(OCR_KIND_LABELS[file.ocr.kind]||"Sonstiger Beleg")} · ${h(Object.entries(file.ocr.fields||{}).filter(([k,v])=>v).map(([k,v])=>OCR_FIELD_LABELS[k]+": "+v).join(" · ")||"keine eindeutigen Felder")} · ${file.ocr.confirmed?"Von Nutzer übernommen":"Noch nicht übernommen"}</div>`:""}</div>`).join(''):'<span class="footnote">Keine Belege hinzugefügt.</span>'}</section>`}
+function renderReview(){return `${heading(3,'Bitte prüfen Sie alle Angaben vor dem testweisen Absenden.')}${personSummary()}${tripsSummary()}${filesSummary()}
+<div class="price-box"><span>Eingetragene Zusatzkosten (keine Erstattungszusage)</span><span>${fmt(data.trips.reduce((a,t)=>a+(num(t.parking)+num(t.ticket))*num(t.count),0))}</span></div>
+<div class="checks" style="margin-top:19px"><div class="checkline"><input id="confirm" type="checkbox" data-confirm="true" ${data.confirmation?'checked':''}><label for="confirm">Ich bestätige, dass meine <strong>Testangaben</strong> vollständig und richtig sind. <span class="req">*</span></label></div><div class="checkline"><input id="readPrivacy" type="checkbox" data-privacy="true" ${data.privacySeen?'checked':''}><label for="readPrivacy">Ich habe verstanden, dass dies eine lokale Demo ist und keine Daten an die Unfallkasse NRW übermittelt werden.</label></div></div>
+<div class="info warn"><i>!</i><div>Mit „Testweise absenden“ erstellen Sie lediglich eine lokale Bestätigungsansicht. <strong>Es wird kein echter Antrag gestellt.</strong> Es findet keine Übertragung an einen Server statt.</div></div>${actions('Testweise absenden →')}`}
+function renderSuccess(){return `<section class="success"><div class="success-icon">✓</div><h2>Testabrechnung abgeschlossen</h2><p>Sie haben den Ablauf erfolgreich getestet. Es wurde <strong>kein Antrag übermittelt</strong> und keine echte Erstattung veranlasst.</p><div class="success-code">${h(receipt)}</div><p>Sie können die Beispielangaben als JSON-Datei exportieren oder für eine weitere Simulation erneut beginnen.</p><button class="btn primary" data-action="export">↓ Testdaten exportieren</button><button class="btn" data-action="restart">↺ Neue Testabrechnung</button><div class="info warn" style="text-align:left"><i>!</i><div>Die Referenz ist ausschließlich eine Demo-Kennung und kein Aktenzeichen der Unfallkasse NRW. Hochgeladene Belege werden nicht mit exportiert.</div></div></section>`}
+function render(){nav();main.innerHTML=(errorText?`<div class="errorbox" role="alert">${h(errorText)}</div>`:'')+(submitted?renderSuccess():[renderPerson,renderJourneys,renderFiles,renderReview][currentStep]());if(currentStep===0&&!submitted)updateIbanStatus(Boolean(errorText&&errorText.includes('IBAN')));let dz=document.getElementById('dropzone');if(dz){dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover')});dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dragover');filesIn(e.dataTransfer.files)});dz.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===dz){e.preventDefault();picker.click()}})} }
+function validate(step){const p=data.person;if(step===0){let names=[['first','Vorname'],['last','Nachname'],['dob','Geburtsdatum'],['street','Straße und Hausnummer'],['zip','Postleitzahl'],['city','Ort'],['iban','IBAN']];for(const [key,label] of names){if(!p[key].trim()){focusKey(key);return `Bitte füllen Sie das Pflichtfeld „${label}“ aus.`}}if(!/^\d{5}$/.test(p.zip.trim())){focusKey('zip');return 'Bitte geben Sie eine fünfstellige Postleitzahl an.'}if(p.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)){focusKey('email');return 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'}const ibanResult=ibanCheck(p.iban);if(!ibanResult.ok){focusKey('iban');return ibanResult.message}return ''}
+if(step===1){for(let i=0;i<data.trips.length;i++){const t=data.trips[i];for(let [key,label] of [['date','Behandlungsdatum'],['doctor','Arztpraxis'],['from','Startadresse'],['to','Zieladresse']]){if(!String(t[key]).trim()){focusTrip(t.id,key);return `Fahrt ${i+1}: Bitte ergänzen Sie „${label}“. `}}if(num(t.count)<1||!Number.isInteger(num(t.count))){focusTrip(t.id,'count');return `Fahrt ${i+1}: Die Anzahl der Termine muss eine ganze Zahl größer null sein.`}if(t.distance!==''&&num(t.distance)<0){focusTrip(t.id,'distance');return `Fahrt ${i+1}: Die Kilometerzahl darf nicht negativ sein.`}if(num(t.parking)<0||num(t.ticket)<0)return `Fahrt ${i+1}: Negative Kosten sind nicht zulässig.`}return ''}
+if(step===2)return data.files.length?'':'Bitte wählen Sie für die Demonstration mindestens einen Beleg aus.';
+if(step===3)return !data.confirmation?'Bitte bestätigen Sie die Richtigkeit der Testangaben.':!data.privacySeen?'Bitte bestätigen Sie, dass Sie den Demo-Hinweis verstanden haben.':'';return ''}
+function focusKey(key){setTimeout(()=>{const el=document.getElementById(key);if(el){el.classList.add('invalid');el.setAttribute('aria-invalid','true');el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});if(key==='iban')updateIbanStatus(true)}},40)}
+function focusTrip(id,key){let el=document.getElementById(`t${id}-${key}`);if(el){el.classList.add('invalid');setTimeout(()=>{el.focus();el.scrollIntoView({behavior:'smooth',block:'center'})},30)}}
+function goto(target){if(target<0||target>3)return;if(submitted){submitted=false}if(target>currentStep){for(let i=currentStep;i<target;i++){const err=validate(i);if(err){errorText=err;render();return}}}currentStep=target;visited=Math.max(visited,target);errorText='';render();document.querySelector('.hero').scrollIntoView({behavior:'smooth',block:'start'})}
+function doNext(){let err=validate(currentStep);if(err){errorText=err;render();return}errorText='';if(currentStep===3){submitted=true;const d=new Date();receipt='DEMO-'+d.toISOString().slice(0,10).replaceAll('-','')+'-'+Math.random().toString(36).slice(2,7).toUpperCase();render();return}goto(currentStep+1)}
+function filesIn(list){const fs=[...list];const existing=data.files.length;let rejected=[];for(const file of fs){let ok=['application/pdf','image/png','image/jpeg'].includes(file.type)||/\.(pdf|png|jpe?g)$/i.test(file.name);if(!ok){rejected.push(file.name+': Format nicht unterstützt');continue}if(file.size>10*1024*1024){rejected.push(file.name+': größer als 10 MB');continue}data.files.push({name:file.name,size:file.size,mime:file.type||(/\.pdf$/i.test(file.name)?'application/pdf':'image/jpeg'),url:URL.createObjectURL(file),raw:file,ocr:null})}previewIndex=existing;errorText=rejected.join(' · ');render()}
+function sample(){data.files.forEach(f=>f.url&&URL.revokeObjectURL(f.url));data=blank();routeState.clear();doctorState.clear();transitState.clear();data.person={reference:'U-2026-001234',insurance:'',first:'Max',last:'Mustermann',dob:'1985-04-15',street:'Musterstraße 12',zip:'40210',city:'Düsseldorf',phone:'0211 12345678',email:'max.mustermann@example.org',iban:'DE89 3704 0044 0532 0130 00'};data.trips=[{...emptyTrip(),date:'2026-04-12',doctor:'Orthopädische Gemeinschaftspraxis',purpose:'Ambulante Behandlung',from:'Konrad-Adenauer-Platz 14, 40210 Düsseldorf',to:'Moorenstraße 5, 40225 Düsseldorf',distance:'',count:'2',parking:'8.50',note:'Beispieldaten – keine reale Behandlung'}];data.confirmation=false;data.privacySeen=false;data.files=[];submitted=false;currentStep=0;visited=0;errorText='Beispieldaten geladen. Die Praxis ist nur ein fiktives Beispiel; die OSM-Suche liefert ggf. keinen Treffer. Für Schritt 3 benötigen Sie noch eine selbst ausgewählte lokale Testdatei.';render()}
+function reset(){if(!window.confirm('Testformular und alle nicht gespeicherten Angaben wirklich zurücksetzen?'))return;data.files.forEach(f=>f.url&&URL.revokeObjectURL(f.url));data=blank();routeState.clear();doctorState.clear();transitState.clear();submitted=false;currentStep=0;visited=0;errorText='';localStorage.removeItem('uknrw-demo-draft-v1');render()}
+function save(){if(!window.confirm('Die Demo speichert Formularfelder lokal und unverschlüsselt im Browser. Hochgeladene Dateien werden nicht mitgespeichert. Nur für erfundene Testdaten verwenden. Fortfahren?'))return;const clone={person:data.person,trips:data.trips,at:new Date().toISOString()};try{localStorage.setItem('uknrw-demo-draft-v1',JSON.stringify(clone));alert('Testentwurf lokal gespeichert. Beim nächsten Öffnen können Sie ihn wiederherstellen. Dateien müssen erneut ausgewählt werden.')}catch(e){alert('Lokales Speichern ist in diesem Browser nicht möglich.') }}
+function download(){const content={hinweis:'TESTDATEN – KEINE ECHTE ANTRAGSTELLUNG',referenz:receipt,stammdaten:data.person,fahrten:data.trips,belege:data.files.map(f=>({dateiname:f.name,groesseByte:f.size,ocr:f.ocr&&!f.ocr.error?{dokumenttyp:f.ocr.kind,extrahierteFelder:f.ocr.fields,method:f.ocr.method,zugeordneteFahrt:f.ocr.tripId,manuellBestaetigt:!!f.ocr.confirmed,uebernommeneFelder:f.ocr.appliedKeys||[],erkanntAm:f.ocr.processedAt}:null})),erstelltAm:new Date().toISOString()};const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='fahrtkosten-testabrechnung.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+function about(){alert('Interaktiver Design-Prototyp für das MPM-Transferprojekt „Digital first Fahrtkostenabrechnung". Technisch: eine eigenständige HTML-Datei ohne Serveranbindung. Formulareingaben bleiben lokal, außer dass bei freiwillig ausgelöster Praxissuche Name und Ort an Nominatim bzw. bei Routenberechnung Adressen an Nominatim und Koordinaten an OSRM übermittelt werden. Die Praxissuche ist keine offizielle Registervalidierung. Die ÖPNV-Preiskontrolle ist nur ein Tarifreferenz-Vergleich und keine amtliche Preisprüfung. Bei Klick auf die Tarifauskunft werden Adressen/Koordinaten an externe Dienste übermittelt. Belege und ihre OCR-Auswertung werden nur lokal im Browser verarbeitet; die Textauslesung nutzt nachgeladenes Tesseract.js/PDF.js. OCR ist nur ein Vorschlag und kein amtlicher Nachweis. Belegbytes und OCR-Volltexte werden nicht gespeichert oder exportiert. „Absenden“ ist eine Simulation. Datenschutz, Barrierefreiheit und Berechnungsregeln sind vor einem realen Einsatz fachlich und rechtlich zu prüfen.')}
+function help(){alert('So testen Sie die Demo:\n\n1. Klicken Sie auf „Beispieldaten laden“ oder erfassen Sie eigene erfundene Daten.\n2. Geben Sie eine oder mehrere Fahrten ein.\n3. Wählen Sie eine Test-PDF- oder Bilddatei und klicken Sie im Belegbereich auf „Text erkennen“. Kontrollieren Sie das Ergebnis und übernehmen Sie nur zutreffende Felder.\n4. Prüfen Sie Ihre Angaben und senden Sie testweise ab.\n\nDie optionale Praxis- und Routenberechnung fragt externe OpenStreetMap-Dienste ab; für ÖPNV ist zusätzlich eine unverbindliche Ticketpreisabfrage möglich; die Praxissuche ist keine amtliche Validierung. Die übrigen Formularschritte laufen lokal. Für einen echten Versand wäre ein geschütztes Backend erforderlich.')}
+function restore(){try{let raw=localStorage.getItem('uknrw-demo-draft-v1');if(raw&&window.confirm('Ein lokal gespeicherter Testentwurf wurde gefunden. Möchten Sie ihn wiederherstellen?')){let ob=JSON.parse(raw);if(ob.person&&Array.isArray(ob.trips)&&ob.trips.length){data.person={...blank().person,...ob.person};data.trips=ob.trips.map(t=>({...emptyTrip(),...t}));errorText='Lokaler Entwurf wiederhergestellt. Dateien müssen erneut hochgeladen werden.'}}}catch(e){}}
+main.addEventListener('input',e=>{const x=e.target;if(x.dataset.field){const key=x.dataset.field.split('.')[1];data.person[key]=x.value;x.classList.remove('invalid');if(key==='iban'){updateIbanStatus(false);if(errorText&&errorText.includes('IBAN')&&ibanCheck(x.value).ok){errorText='';main.querySelector('.errorbox')?.remove()}}}if(x.dataset.trip){const t=data.trips.find(t=>String(t.id)===x.dataset.trip);if(t){t[x.dataset.tripfield]=x.type==='checkbox'?x.checked:x.value;x.classList.remove('invalid');if(x.dataset.tripfield==='doctor')resetDoctorOnChange(t);else if(x.dataset.tripfield==='from'||x.dataset.tripfield==='to'){markFareStale(t);clearRouteIfAddressChanged(t);updateDoctorPanel(t)}else if(x.dataset.tripfield==='date'){markFareStale(t);updateFarePanel(t)}else if(x.dataset.tripfield==='distance'){t.distanceSource='';routeState.delete(String(t.id));updateRouteDisplay(t)}if(['ticket','roundtrip'].includes(x.dataset.tripfield)&&t.transport==='ÖPNV'){if(x.dataset.tripfield==='ticket')t.fareQuote=null;const el=document.querySelector(`[data-fare-status="${t.id}"]`);if(el){const tmp=document.createElement('div');tmp.innerHTML=fareStatusHtml(t);el.replaceWith(tmp.firstElementChild)}}} }});
+main.addEventListener('focusout',e=>{
+ if(e.target.id!=='iban')return;
+ const x=e.target,compact=compactIban(x.value);
+ if(/^[A-Z0-9]+$/.test(compact)&&compact.length>=4){
+   x.value=compact.replace(/(.{4})/g,'$1 ').trim();
+   data.person.iban=x.value;
+ }
+ updateIbanStatus(true);
+});
+main.addEventListener('input',e=>{const x=e.target;if(x.dataset.ocrEdit!==undefined){const f=ocrCurrentFile(x.dataset.file);if(f?.ocr&&!f.ocr.error){f.ocr.fields[x.dataset.ocrEdit]=x.value;f.ocr.confirmed=false;const cb=document.querySelector(`[data-ocr-select="${x.dataset.ocrEdit}"][data-file="${x.dataset.file}"]`);if(cb){cb.disabled=!x.value.trim()||(x.dataset.ocrEdit==='amount'&&!['transit','parking'].includes(f.ocr.kind));if(cb.disabled)cb.checked=false;}}}});
+main.addEventListener('change',e=>{const x=e.target;if(x.dataset.ocrKind!==undefined){const f=ocrCurrentFile(x.dataset.ocrKind);if(f?.ocr){f.ocr.kind=x.value;f.ocr.confirmed=false;render();}return;}if(x.dataset.ocrTrip!==undefined){const f=ocrCurrentFile(x.dataset.ocrTrip);if(f?.ocr){f.ocr.tripId=x.value;f.ocr.confirmed=false;render();}return;}if(x.dataset.ocrEdit!==undefined){const f=ocrCurrentFile(x.dataset.file);if(f?.ocr){f.ocr.fields[x.dataset.ocrEdit]=x.value;const host=x.closest('[data-ocr-card]'),cmp=host?.querySelector('.ocr-compare');if(cmp){cmp.textContent=ocrMatchInfo(f);cmp.classList.toggle('diff',ocrMatchInfo(f).includes('⚠'));}}return;}});
+main.addEventListener('change',e=>{const x=e.target;if(x.dataset.field){data.person[x.dataset.field.split('.')[1]]=x.value}if(x.dataset.trip){let t=data.trips.find(t=>String(t.id)===x.dataset.trip);if(t){t[x.dataset.tripfield]=x.type==='checkbox'?x.checked:x.value;if(x.dataset.tripfield==='transport'){markFareStale(t);render();return;}if(x.dataset.tripfield==='fareNetwork'){t.fareLevel='';markFareStale(t);updateFarePanel(t);}else if(x.dataset.tripfield==='fareProduct'){if(!(t.fareLevel in (FARE_REFERENCES[t.fareNetwork]?.products?.[t.fareProduct]||{})))t.fareLevel='';updateFarePanel(t);}else if(x.dataset.tripfield==='fareLevel'){updateFarePanel(t);}else if(['ticket','roundtrip'].includes(x.dataset.tripfield)){if(x.dataset.tripfield==='ticket')t.fareQuote=null;const el=document.querySelector(`[data-fare-status="${t.id}"]`);if(el){const tmp=document.createElement('div');tmp.innerHTML=fareStatusHtml(t);el.replaceWith(tmp.firstElementChild)}}const host=x.closest('[data-tripcontainer]');const total=host?.querySelector('.trip-total');if(total){total.innerHTML=tripTotal(t)}}}if(x.dataset.confirm)data.confirmation=x.checked;if(x.dataset.privacy)data.privacySeen=x.checked});
+main.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;const a=btn.dataset.action;if(a==='runOCR')runOCR(Number(btn.dataset.file));else if(a==='applyOCR')applyOCR(Number(btn.dataset.file));else if(a==='calculateRoute')calculateRoute(btn.dataset.id);else if(a==='queryFare')queryFare(btn.dataset.id);else if(a==='applyFareOffer')applyFareOffer(btn.dataset.id,btn.dataset.offer);else if(a==='searchDoctor')searchDoctor(btn.dataset.id);else if(a==='pickDoctor')pickDoctor(btn.dataset.id,btn.dataset.index);else if(a==='applyDoctorAddress')applyDoctorAddress(btn.dataset.id);else if(a==='clearDoctor'){const t=data.trips.find(t=>String(t.id)===String(btn.dataset.id));if(t){t.doctorSuggestion=null;doctorState.delete(String(t.id));updateDoctorPanel(t)}}else if(a==='next')doNext();else if(a==='back')goto(currentStep-1);else if(a==='save')save();else if(a==='addTrip'){data.trips.push({...emptyTrip(),from:data.person.street+', '+data.person.zip+' '+data.person.city});render();setTimeout(()=>document.querySelector('[data-tripcontainer]:last-of-type')?.scrollIntoView({behavior:'smooth',block:'center'}),10)}else if(a==='removeTrip'){data.trips=data.trips.filter(t=>String(t.id)!==btn.dataset.id);transitState.delete(String(btn.dataset.id));render()}else if(a==='openPicker')picker.click();else if(a==='removeFile'){let i=Number(btn.dataset.file),removed=data.files.splice(i,1)[0];if(removed?.url)URL.revokeObjectURL(removed.url);previewIndex=0;render()}else if(a==='preview'){previewIndex=Number(btn.dataset.file);render()}else if(a==='export')download();else if(a==='restart')reset();if(btn.dataset.edit!==undefined)goto(Number(btn.dataset.edit))});
+bar.addEventListener('click',e=>{const b=e.target.closest('[data-nav]');if(b)goto(Number(b.dataset.nav))});sidebar.addEventListener('click',e=>{const b=e.target.closest('[data-nav]');if(b)goto(Number(b.dataset.nav))});
+picker.addEventListener('change',()=>{filesIn(picker.files);picker.value=''});
+document.getElementById('exampleBtn').onclick=()=>{if(confirm('Aktuelle Eingaben durch fiktive Beispieldaten ersetzen?'))sample()};document.getElementById('clearBtn').onclick=reset;document.getElementById('aboutBtn').onclick=about;document.getElementById('helpBtn').onclick=help;document.getElementById('mobileInfo').onclick=about;document.getElementById('mobileHelp').onclick=help;document.getElementById('mobileForm').onclick=()=>goto(0);document.getElementById('mobileStart').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+restore();render();
+})();
+</script>
+</body>
+</html>
